@@ -1,0 +1,26 @@
+{
+  "name": "autoCommiter",
+  "version": "1.0.0",
+  "description": "autoCommits to Github to make you look like a dedicated developer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "tsc -w",
+    "dev": "nodemon build/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lkaldyne/autoCommiter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lkaldyne/autoCommiter/issues"
+  },
+  "homepage": "https://github.com/lkaldyne/autoCommiter#readme",
+  "dependencies": {
+    "eslint": "^5.16.0",
+    "nodemon": "^1.19.1"
+  }
+}
