@@ -1,31 +1,23 @@
-const express = require('express');
+import express from 'express';
 import * as bodyParser from 'body-parser';
 import { profileRouter } from './routes/ProfileRouter';
-import mongoSchema from './database/schema';
-import mongoose, { Schema } from 'mongoose';
-import uniqueValidator  from 'mongoose-unique-validator';
-import dotenv from 'dotenv'
-import passport from 'passport'
-import { Strategy } from 'passport-local';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import User from './models/User';
 
 const app = express();
-
 dotenv.config();
 
 // Mongo config
-const UserSchema = new Schema({ 
-    username: {type: String, required: true, unique: true },
-    password: {type: String, required: true, }
- });
-UserSchema.plugin(uniqueValidator);
-  
 const DBKey: any = process.env.dbKey; 
-mongoose.connect(DBKey, { useNewUrlParser: true });
+mongoose.connect(DBKey, { useNewUrlParser: true })
+ .then(() => console.log("Succesfully connected to MongoDB."))
+ .catch((err) => console.error(err));
 
-const User = mongoose.model("User", UserSchema);
-
-// const username = "Daniel"
-// const password = "Password!"
+// Fix mongo deprecation warnings
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 app.get('/', async (req: any, res: any) => {
     try {
@@ -35,36 +27,8 @@ app.get('/', async (req: any, res: any) => {
     } catch (e) {
         console.log(e); 
     }
-    res.send("Successfully added user!"); 
+    res.send("Successfully added user!");
 });
-
-// // Passport config
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-// passport.serializeUser(function(user, done) {
-//   done(null, user._id);
-// });
-
-// passport.deserializeUser(function(userId, done) {
-//   User.findById(userId, (err, user) => done(err, user));
-// });
-
-// const local = new Strategy((username, password, done) => {
-//   User.findOne({ username })
-//     .then(user => {
-//       if (!user || !user.validPassword(password)) {
-//         done(null, false, { message: "Invalid username/password" });
-//       } else {
-//         done(null, user);
-//       }
-//     })
-//     .catch(e => done(e));
-// });
-// passport.use("local", local);
-
-// // Routes
-// app.use("/", require("./routes")(passport));
 
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
