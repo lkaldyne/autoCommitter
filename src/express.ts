@@ -3,7 +3,9 @@ import * as bodyParser from 'body-parser';
 import { profileRouter } from './routes/ProfileRouter';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import { User, saveUser } from './models/User';
+import passport = require('passport');
+import { configurePassport } from './utils/passport';
+import session from 'express-session'; 
 
 const app = express();
 dotenv.config();
@@ -19,17 +21,19 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
-app.get('/', async (req: any, res: any) => {
-    try {
-        const newUser = new User({username: 'Daniel', password: 'password!!'});
-        console.log(newUser); 
-        await newUser.save();
-    } catch (e) {
-        console.log(e); 
-    }
-    res.send("Successfully added user!");
-});
+// Configure express session
+app.use(session({
+    secret: "secret",
+    resave: true,
+    saveUninitialized: true
+}));
 
+// Passport config
+configurePassport(passport); 
+app.use(passport.initialize());
+app.use(passport.session()); 
+
+// General config
 app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
 

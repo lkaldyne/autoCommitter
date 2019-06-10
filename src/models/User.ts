@@ -10,9 +10,10 @@ const UserSchema: mongoose.Schema<any>  = new Schema({
 
 UserSchema.plugin(uniqueValidator);
 
-interface userModel {
+export interface userModel {
     username: string,
     password: string,
+    id: string
     save: (err: Error) => void
 };
 
