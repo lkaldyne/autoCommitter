@@ -3,7 +3,7 @@ import * as bodyParser from 'body-parser';
 import { profileRouter } from './routes/ProfileRouter';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import User from './models/User';
+import { User, saveUser } from './models/User';
 
 const app = express();
 dotenv.config();
@@ -12,8 +12,8 @@ dotenv.config();
 const DBKey: any = process.env.dbKey; 
 mongoose.connect(DBKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
- .catch((err) => console.error(err));
-
+ .catch((err: mongoose.Error) => console.error(err));
+ 
 // Fix mongo deprecation warnings
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
