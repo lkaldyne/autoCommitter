@@ -6,15 +6,23 @@ import dotenv from 'dotenv';
 import passport = require('passport');
 import { configurePassport } from './utils/passport';
 import session from 'express-session'; 
+import cookieParser from 'cookie-parser';
+import mongoStore from 'connect-mongo';
+
+const MongoStore = mongoStore(session); 
 
 const app = express();
 dotenv.config();
 
 // Mongo config
 const DBKey: any = process.env.dbKey; 
-mongoose.connect(DBKey, { useNewUrlParser: true })
+const localKey: any = process.env.dblocal; 
+mongoose.connect(localKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
  .catch((err: mongoose.Error) => console.error(err));
+
+mongoose.Promise = global.Promise;
+const db: any  = mongoose.connection;
  
 // Fix mongo deprecation warnings
 mongoose.set('useNewUrlParser', true);
@@ -22,10 +30,12 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 // Configure express session
+app.use(cookieParser());
 app.use(session({
     secret: "secret",
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    store: new MongoStore({ mongooseConnection: db })
 }));
 
 // Passport config
