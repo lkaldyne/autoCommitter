@@ -1,6 +1,8 @@
 import { Strategy } from 'passport-local';
 import { User, userModel } from '../models/User';
 import bcrypt from 'bcrypt';
+import { Request, Response } from 'express'; 
+import { NextFunction } from 'connect';
 
 export function configurePassport(passport: any) {
     passport.use(
@@ -29,3 +31,11 @@ export function configurePassport(passport: any) {
         });
     });
 }
+
+export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
+    if (req.isAuthenticated()) {
+        return next();
+    } else {
+        res.redirect('/api/profiles/loginFailure');
+    }
+}   
