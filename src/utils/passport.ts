@@ -36,6 +36,6 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
     if (req.isAuthenticated()) {
         return next();
     } else {
-        res.redirect('/api/profiles/loginFailure');
+        res.redirect('/api/profiles/invalidSession');
     }
 }   

@@ -13,31 +13,63 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
   })(req, res, next); 
 });
 
-router.post('/logout', (req: Request, res: Response) => {
+router.post('/logout', ensureAuthenticated, (req: Request, res: Response) => {
   req.logOut(); 
-  res.send("Successfully logged out.");
+  res.status(200).json(
+    {
+      description: "Successfully logged out.",
+      status: "SUCCESS"
+    });
 });
 
 router.post('/register', async (req: Request, res: Response) => {
   let { username, password } = req.body;
-  if (!username || !password) res.status(400).send({error: 'Bad Request. Missing a required field.'});
+  if (!username || !password) res.status(200).json(
+    {
+      description: "Missing required field.",
+      status: "FAILURE"
+    });;
   let newUser = new User({username, password});
   saveUser(newUser, (err: Error) => {
     if (err) res.status(500).send({ err });
-    else res.send('Successfully created new user');  
+    else res.status(200).json(
+      {
+        description: "Successfully created new user.",
+        status: "SUCCESS"
+      });
   });
 });
 
-router.post('/testPath', ensureAuthenticated, (req: Request, res: Response) => {
-  res.send("User is authenticated!");
+router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
+  res.json(
+    { 
+      User: req.user, 
+      status: "SUCCESS"
+    }); 
+});
+
+router.get('/invalidSession', (req: Request, res: Response) => {
+  res.status(400).json(
+    {
+      description: "There is no user in session.",
+      status: "FAILURE"
+    });
 });
 
 router.get('/loginSuccess', (req: Request, res: Response) => {
-  res.send("Successfully logged in!");
+  res.status(200).json(
+    {
+      description: "Successfully logged in.",
+      status: "SUCCESS"
+    });
 });
 
 router.get('/loginFailure', (req: Request, res: Response) => {
-  res.send("Login failed!");
+  res.status(400).json(
+    {
+      description: "Invalid credentials. There was an issue logging in to your account.",
+      status: "FAILURE"
+    });
 });
 
 export const profileRouter: Router = router
