@@ -17,7 +17,7 @@ dotenv.config();
 // Mongo config
 const DBKey: any = process.env.dbKey; 
 const localKey: any = process.env.dblocal; 
-mongoose.connect(localKey, { useNewUrlParser: true })
+mongoose.connect(DBKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
  .catch((err: mongoose.Error) => console.error(err));
 
