@@ -53,3 +53,22 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log('Listening on port ' + port);
 });
+
+// Sample usage code for Account
+/*console.log('yeehaw');
+let newAccount = new Account(11, "autocommiter", "Passport1169", "burner.github@gmail.com");
+newAccount.clone(() => {
+    newAccount.alterFile(() => {
+        newAccount.stage(() => {
+            newAccount.commit(() => {
+                console.log("committed");
+                newAccount.push(() => {
+                    console.log("pushed");
+                    newAccount.removeRepo(() => {
+                        console.log("removed repo");
+                    })
+                });
+            });
+        });
+    });    
+});*/
