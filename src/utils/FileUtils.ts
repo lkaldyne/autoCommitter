@@ -2,9 +2,9 @@ import fs from 'fs';
 
 export default class FileUtils {
 
-    public createCommitDiff(filePath: string): void {
+    public static createCommitDiff(filePath: string, callback: (err? : any) => void): void {
         fs.writeFile(filePath, new Date().toISOString(), (err) => {
-            if (err) console.error(err); 
+            callback(err);
         }); 
     }
 
