@@ -1,27 +1,23 @@
 import React from 'react';
-import { Container, Card, Row, Col, FormText } from 'reactstrap';
-import PropTypes from 'prop-types';
+import { Container, Row, Col} from 'reactstrap';
+import BodyInfo from '../components/BodyInfo';
+import SignupForm from '../components/Forms/SignupForm';
 
 export function PageContainer(props) {
-    const subtitle = (props.subTitle) ? <FormText>{props.subTitle}</FormText> : undefined;
     return (
-        <Container style={{marginTop:'5px'}}>
-            <Card body>
-                <Row>
-                    <Col xs={12}>
-                        <h3>{props.title}</h3>
-                        {subtitle}
-                    </Col>
-                </Row>
-                <br/>
-                {props.children}
-            </Card>
+        <Container style={containerStyle}>
+            <Row style={{margin:'2.5rem 1.5rem'}}>
+                <Col xs={12} md={8}><BodyInfo/></Col>
+                <Col xs={6} md={4}><SignupForm/></Col>
+            </Row>
         </Container>
     );
 }
 
-PageContainer.propTypes = {
-    title: PropTypes.string.isRequired,
-    subTitle: PropTypes.string,
-    excludeBackButton: PropTypes.bool,
+const containerStyle = {
+    border: 'none',
+    padding: '0',
+    maxWidth: 'initial',
+    margin: '0px',
+    // textAlign: 'center'
 }

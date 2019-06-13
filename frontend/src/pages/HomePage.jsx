@@ -1,22 +1,17 @@
 import React from 'react'
 import { PageContainer } from '../components/PageContainer';
-import { Row, Col, Button } from 'reactstrap'
-
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 
 export class HomePage extends React.Component {
   render() {
     return (
-      <PageContainer
-        title="Home"
-        subTitle="Just to start off"
-      >
-        <Row>
-          <Col sm={3} />
-          <Col sm={6}>
-            <Button color="danger">Please enter your password and social security number, it will be stored in plain text (CLICK ME)</Button>
-          </Col>
-        </Row>
-      </PageContainer>
+      <React.Fragment>
+        <Header title='AutoCommitter'/>
+        <PageContainer>
+        </PageContainer>
+        <Footer />
+      </React.Fragment>
     )
   }
 }
