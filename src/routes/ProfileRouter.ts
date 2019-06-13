@@ -3,6 +3,8 @@ import { User, saveUser } from '../models/User';
 import passport from 'passport';
 import { NextFunction } from 'connect';
 import { ensureAuthenticated } from '../utils/passport';
+import * as crypto_utils from '../utils/Encrypt';
+
 
 const router: Router = Router();
 
@@ -10,11 +12,11 @@ router.post('/login', (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('local', {
     successRedirect: '/api/profiles/loginSuccess',
     failureRedirect: '/api/profiles/loginFailure'
-  })(req, res, next); 
+  })(req, res, next);
 });
 
 router.post('/logout', ensureAuthenticated, (req: Request, res: Response) => {
-  req.logOut(); 
+  req.logOut();
   res.status(200).json(
     {
       description: "Successfully logged out.",
@@ -23,13 +25,17 @@ router.post('/logout', ensureAuthenticated, (req: Request, res: Response) => {
 });
 
 router.post('/register', async (req: Request, res: Response) => {
-  let { username, password } = req.body;
-  if (!username || !password) res.status(200).json(
-    {
-      description: "Missing required field.",
-      status: "FAILURE"
-    });;
-  let newUser = new User({username, password});
+
+  let { username, password, github_token } = req.body;
+  if (!username || !password || !github_token) {
+    res.status(200).json(
+      {
+        description: "Missing required field.",
+        status: "FAILURE"
+      });
+    return;
+  }
+  let newUser = new User({ username, password, github_token });
   saveUser(newUser, (err: Error) => {
     if (err) res.status(500).send({ err });
     else res.status(200).json(
@@ -41,11 +47,15 @@ router.post('/register', async (req: Request, res: Response) => {
 });
 
 router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
+  console.log('wero')
+  let github_decrypted_token = crypto_utils.decrypt(req.user.github_token);
+  req.user.github_token = github_decrypted_token;
+
   res.json(
-    { 
-      User: req.user, 
+    {
+      User: req.user,
       status: "SUCCESS"
-    }); 
+    });
 });
 
 router.get('/invalidSession', (req: Request, res: Response) => {
