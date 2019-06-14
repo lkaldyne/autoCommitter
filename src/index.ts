@@ -8,6 +8,11 @@ import { configurePassport } from './utils/passport';
 import session from 'express-session'; 
 import cookieParser from 'cookie-parser';
 import mongoStore from 'connect-mongo';
+import path from "path";
+
+export const commitFile: string =  "README.md";
+export const repoPath: string = path.join(".", "commitsRepo");
+export const repoUrl: string = "github.com/lkaldyne/commitsRepo.git";
 
 const MongoStore = mongoStore(session); 
 
