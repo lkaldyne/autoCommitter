@@ -79,7 +79,10 @@ export default class Account {
     }
 
     public removeRepo(callback: () => void) {
-        rmdir(repoPath, callback);
+        rmdir(repoPath, () => {
+            console.log("repo deleted")
+            callback()
+        });
     }
 
     public shouldTheyCommitToday(): boolean {
