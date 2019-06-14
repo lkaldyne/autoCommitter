@@ -58,7 +58,7 @@ export default class Account {
         git(repoPath)
         .silent(true)
         .commit("commit", {
-            '--author': this.info.username + '<' + this.info.email + '>'
+            '--author': `${this.info.username}<${this.info.email}>`
         })
         .then(() => {
             console.log("file committed")
