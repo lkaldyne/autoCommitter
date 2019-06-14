@@ -15,7 +15,7 @@ export default class LoginForm extends React.Component {
             <Input type="password" name="password" id="password" required placeholder="Password" />
           </FormGroup>
           {' '}
-          <Button>Submit</Button>
+          <Button>Login</Button>
         </Form>
       );
     }

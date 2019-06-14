@@ -1,4 +1,5 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
 import { profileRouter } from './routes/ProfileRouter';
 import mongoose from 'mongoose';
@@ -18,6 +19,12 @@ const MongoStore = mongoStore(session);
 
 const app = express();
 dotenv.config();
+
+app.use((req: Request, res: Response, next: any) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 // Mongo config
 const DBKey: any = process.env.dbKey; 
