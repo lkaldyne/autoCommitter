@@ -6,7 +6,12 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc -w",
-    "dev": "nodemon build/index.js"
+    "dev": "nodemon build/index.js",
+    "start": "npm run serve",
+    "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
+    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build",
+    "serve": "node build/index.js"
   },
   "repository": {
     "type": "git",
@@ -46,6 +51,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "rmdir": "^1.2.0",
-    "simple-git": "^1.113.0"
+    "simple-git": "^1.113.0",
+    "typescript": "^3.5.2"
   }
 }

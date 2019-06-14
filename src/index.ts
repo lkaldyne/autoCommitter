@@ -1,4 +1,5 @@
 import express from 'express';
+import { Request, Response } from 'express';
 import * as bodyParser from 'body-parser';
 import { profileRouter } from './routes/ProfileRouter';
 import mongoose from 'mongoose';
@@ -21,8 +22,8 @@ dotenv.config();
 
 // Mongo config
 const DBKey: any = process.env.dbKey; 
-const localKey: any = process.env.dblocal; 
-mongoose.connect(localKey, { useNewUrlParser: true })
+// const localKey: any = process.env.dblocal; 
+mongoose.connect(DBKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
  .catch((err: mongoose.Error) => console.error(err));
 
@@ -53,6 +54,11 @@ app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
 
 app.use('/api/profiles', profileRouter);
+
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
+app.get('*', (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'build', 'index.html'));
+});
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => {
