@@ -61,19 +61,25 @@ app.listen(port, () => {
 
 // Sample usage code for Account
 
-// let newAccount = new Account(11, "user", "pass", "email");
-// newAccount.clone(() => {
-//     newAccount.alterFile(() => {
-//         newAccount.stage(() => {
-//             newAccount.commit(() => {
-//                 console.log("committed");
-//                 newAccount.push(() => {
-//                     console.log("pushed");
-//                     newAccount.removeRepo(() => {
-//                         console.log("removed repo");
-//                     })
-//                 });
-//             });
-//         });
-//     });    
-// });
+/*let newAccount = new Account({
+    username: "",
+    email: "",
+    ghPersonalKey: "",
+    maxNumberOfCommitsPerDay: #,
+    commitDaysPerWeek: #
+});
+newAccount.clone(() => {
+    newAccount.alterFile(() => {
+        newAccount.stage(() => {
+            newAccount.commit(() => {
+                console.log("committed");
+                newAccount.push(() => {
+                    console.log("pushed");
+                    newAccount.removeRepo(() => {
+                        console.log("removed repo");
+                    })
+                });
+            });
+        });
+    });    
+});*/
