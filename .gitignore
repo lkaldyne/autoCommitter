@@ -64,3 +64,6 @@ typings/
 
 #Don't commit built code
 build/
+
+package-lock.json
+frontend/package-lock.json
