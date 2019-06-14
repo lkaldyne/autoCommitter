@@ -62,6 +62,5 @@ export default class SignupForm extends React.Component {
 
   const signupWrapper = {
       border: '1px solid #ccc',
-      padding: '30px',
-    //   flex: '3'
+      padding: '30px'
   }

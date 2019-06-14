@@ -18,6 +18,5 @@ const containerStyle = {
     border: 'none',
     padding: '0',
     maxWidth: 'initial',
-    margin: '0px',
-    // textAlign: 'center'
+    margin: '0px'
 }
