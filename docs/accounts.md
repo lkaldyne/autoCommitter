@@ -17,3 +17,8 @@ Passport11
 auto-commiter
 
 acaf433871e6b013f2425ad5eac9dac073286ab9
+
+
+# heroku
+burner.github@gmail.com
+Passport11!
