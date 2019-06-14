@@ -7,12 +7,12 @@ export default class LoginForm extends React.Component {
         <Form inline>
           <FormGroup style={formStyle}>
             <Label for="exampleEmail" hidden>Email</Label>
-            <Input type="email" name="username" id="username" placeholder="Email" />
+            <Input type="email" name="username" id="username"  required placeholder="Email" />
           </FormGroup>
           {' '}
           <FormGroup style={formStyle}>
             <Label for="examplePassword" hidden>Password</Label>
-            <Input type="password" name="password" id="password" placeholder="Password" />
+            <Input type="password" name="password" id="password" required placeholder="Password" />
           </FormGroup>
           {' '}
           <Button>Submit</Button>

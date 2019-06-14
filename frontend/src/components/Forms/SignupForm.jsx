@@ -1,6 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import PropTypes from 'prop-types';
 
 export default class SignupForm extends React.Component {
     state = {
@@ -17,13 +18,9 @@ export default class SignupForm extends React.Component {
     }
 
     register = (e) => {
-        const account = {
-            username: this.state.username,
-            password: this.state.password,
-            github_token: this.state.github_token
-        }
+        const {username, password, github_token} = this.state;
 
-        axios.post(`http://localhost:5000/api/profiles/register`, account)
+        axios.post(`http://localhost:5000/api/profiles/register`, {username, password, github_token})
         .then(res => {
           console.log(res);
           console.log(res.data);
@@ -49,7 +46,7 @@ export default class SignupForm extends React.Component {
             </FormGroup>
             <FormGroup check>
                 <Label check>
-                <Input type="checkbox" />{' '}
+                <Input type="checkbox" required />{' '}
                 I agree to the <a href="https://github.com/lkaldyne/autoCommitter/blob/master/frontend/src/components/PageContainer.jsx" onClick={this.handleClick}>terms & conditions.</a>
                 </Label>
             </FormGroup>
@@ -64,3 +61,9 @@ export default class SignupForm extends React.Component {
       border: '1px solid #ccc',
       padding: '30px'
   }
+
+SignupForm.propTypes = {
+    username: PropTypes.string.isRequired,
+    password: PropTypes.string.isRequired,
+    github_token: PropTypes.string.isRequired
+}

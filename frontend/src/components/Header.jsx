@@ -1,24 +1,24 @@
 import React from 'react'
-// import { PageContainer } from '../components/PageContainer';
-// import Form from '../components/Form'
 import LoginForm from '../components/Forms/LoginForm';
-// import { Row, Col, Button } from 'reactstrap'
 import PropTypes from 'prop-types';
 
-
-export default class Header extends React.Component {
-  render() {
-    return (
+export default function Header(props) {
+    return props.isHomepage ? (
         <div style={headerDiv}>
             <div style={{margin: '15px'}}>
-                <h1 style={title}>{this.props.title}</h1>
+                <h1 style={title}>{props.title}</h1>
             </div>
             <div style={{margin: '15px'}}>
                 <LoginForm />
             </div>
         </div>
-    )
-  }
+    ) : (
+        <div style={headerDiv}>
+            <div style={{margin: '15px'}}>
+                <h1 style={title}>{props.title}</h1>
+            </div>
+        </div>
+    );
 }
 
 const headerDiv = {
