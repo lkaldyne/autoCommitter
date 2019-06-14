@@ -9,6 +9,7 @@
     "dev": "nodemon build/index.js",
     "start": "npm run serve",
     "build-ts": "tsc",
+    "postinstall": "npm run build-ts",
     "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build",
     "serve": "node build/index.js"
   },
