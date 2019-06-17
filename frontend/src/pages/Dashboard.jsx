@@ -10,14 +10,41 @@ export class Dashboard extends React.Component {
     }
 
     componentDidMount = () => {
-        axios.get(`http://localhost:5000/api/profiles/user`)
-            .then(res => {
-                console.log(res);
-            })
-            .catch(res => {
-                console.log("failed");
-                this.setState({loggedIn: false});
-            })
+        // axios.defaults.withCredentials = true; 
+        // axios.get(`http://localhost:5000/api/profiles/user`)
+        //     .then(res => {
+        //         console.log(res);
+        //     })
+        //     .catch(res => {
+        //         console.log("failed");
+        //         this.setState({loggedIn: false});
+        //     })
+        // const transport = axios.create({
+        //     withCredentials: true,
+        //     baseURL: 'http://localhost:5000',
+        //   })
+          
+        //   transport
+        //     .get('/api/profiles/user')
+        //     .then(res => console.log(res))
+        //     .catch(err => { console.log(err) })
+    
+        // fetch('http://localhost:5000/api/profiles/user', {credentials: "same-origin"})
+        // .then(res => console.log(res))
+        // .catch(err => console.log(err));
+
+        axios('http://localhost:5000/api/profiles/user', { 
+            method: 'get',
+            withCredentials: true 
+          })
+          .then((response) => {
+            if (response.status === 200) {
+              console.log(response); 
+            } else {
+              return false;
+            }
+          });
+
     }
 
 
