@@ -1,10 +1,10 @@
 import React from 'react';
-import { HomePage } from './pages/HomePage';
+import { Routes } from './routing/Routes';
 
 export default class App extends React.Component {
   render() {
     return (
-      <HomePage />
+      <Routes />
     )
   }
 }
