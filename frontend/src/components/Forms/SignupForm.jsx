@@ -19,7 +19,8 @@ export default class SignupForm extends React.Component {
     handleClick = (e) => {
     }
 
-    register = () => {
+    register = (e) => {
+        e.preventDefault();
         const {username, password, github_token} = this.state;
         axios.post(`http://localhost:5000/api/profiles/register`, {username, password, github_token})
         .then(res => {
