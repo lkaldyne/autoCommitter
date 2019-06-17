@@ -27,9 +27,9 @@ app.use((req: Request, res: Response, next: any) => {
 });
 
 // Mongo config
-const DBKey: any = process.env.dbKey; 
-// const localKey: any = process.env.dblocal; 
-mongoose.connect(DBKey, { useNewUrlParser: true })
+// const DBKey: any = process.env.dbKey; 
+const localKey: any = process.env.dblocal; 
+mongoose.connect(localKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
  .catch((err: mongoose.Error) => console.error(err));
 
