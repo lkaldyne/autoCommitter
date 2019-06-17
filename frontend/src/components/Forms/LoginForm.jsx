@@ -11,7 +11,8 @@ export default class LoginForm extends React.Component {
         toDashboard: false
     }
 
-    login = () => {
+    login = (e) => {
+        e.preventDefault();
         const {username, password} = this.state;
         axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
         .then(res => {
@@ -21,7 +22,7 @@ export default class LoginForm extends React.Component {
         })
         .catch(res => {
             this.setState(() => ({
-                errorMessage: 'Invalid credentials.'
+                errorMessage: 'Invalid credentials'
             }))
         })
     }
@@ -33,6 +34,7 @@ export default class LoginForm extends React.Component {
     render() {
         return this.state.toDashboard === false ? 
             <Form inline onSubmit={this.login} method="POST">
+                <p style={{color:'red', margin: '0', marginRight: '20px'}}>{this.state.errorMessage}</p>
                 <FormGroup style={formStyle}>
                     <Label for="exampleEmail" hidden>Email</Label>
                     <Input type="email" name="username" id="username" placeholder="Email" onChange={this.handleChange} required/>

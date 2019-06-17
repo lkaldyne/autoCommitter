@@ -21,15 +21,16 @@ const app = express();
 dotenv.config();
 
 app.use((req: Request, res: Response, next: any) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     next();
 });
 
 // Mongo config
-const DBKey: any = process.env.dbKey; 
-// const localKey: any = process.env.dblocal; 
-mongoose.connect(DBKey, { useNewUrlParser: true })
+// const DBKey: any = process.env.dbKey; 
+const localKey: any = process.env.dblocal; 
+mongoose.connect(localKey, { useNewUrlParser: true })
  .then(() => console.log("Succesfully connected to MongoDB."))
  .catch((err: mongoose.Error) => console.error(err));
 
@@ -45,8 +46,8 @@ mongoose.set('useCreateIndex', true);
 app.use(cookieParser());
 app.use(session({
     secret: "secret",
-    resave: true,
-    saveUninitialized: true,
+    resave: false,
+    saveUninitialized: false,
     store: new MongoStore({ mongooseConnection: db })
 }));
 
