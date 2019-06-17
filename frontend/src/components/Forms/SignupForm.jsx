@@ -8,7 +8,7 @@ export default class SignupForm extends React.Component {
         username: '',
         password: '',
         github_token: '',
-        toWelcome: false,
+        toDashboard: false,
         errorMessage: ''
     }
 
@@ -19,26 +19,16 @@ export default class SignupForm extends React.Component {
     handleClick = (e) => {
     }
 
-    register = (e) => {
-        e.preventDefault()
+    register = () => {
         const {username, password, github_token} = this.state;
         axios.post(`http://localhost:5000/api/profiles/register`, {username, password, github_token})
         .then(res => {
-            if (res.data.status === 'SUCCESS') {
-                axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
-                .then(res => {
-                    console.log("hi")
-                    this.setState(() => ({
-                            toWelcome: true,
-                        }))
-                })
-               
-                    // this.setState(() => ({
-                    //     toDashboard: true
-                    // })))
-            } else {
-  
-            }
+            axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
+            .then(res => {
+                this.setState(() => ({
+                        toDashboard: true,
+                    }))
+            })
         })
         .catch(res => {
             this.setState(() => ({
@@ -48,7 +38,7 @@ export default class SignupForm extends React.Component {
     }
 
     render() {
-        return this.state.toWelcome === false ? 
+        return this.state.toDashboard === false ? 
                 <div style={signupWrapper}>
                     <h1 style={{paddingBottom: '15px'}}>Sign Up</h1>
                     <Form onSubmit={this.register} method="POST">
@@ -76,7 +66,7 @@ export default class SignupForm extends React.Component {
                     </div>
                     </Form>
                 </div>
-            : <Redirect to='/welcome' />
+            : <Redirect to='/dashboard' />
     }
   }
 
