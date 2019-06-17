@@ -21,11 +21,11 @@ export class HomePage extends React.Component {
                   <Footer />
                 </React.Fragment>
             )}/>
-            <Route exact path="/welcome" render={() => (
+            <Route exact path="/dashboard" render={() => (
               this.loggedIn ? (
                 <React.Fragment>
                   <Header title='AutoCommitter' isHomepage={false}/>
-                  <PageContainer />
+                  {/* <PageContainer /> */}
                   <Footer />
                 </React.Fragment>
               ) : (
