@@ -6,7 +6,7 @@ export default function Header(props) {
     return props.isHomepage ? (
         <div style={headerDiv}>
             <div style={{margin: '15px'}}>
-                <h1 style={title}>{props.title}</h1>
+                <a href='/' style={{textDecoration: 'none'}}><h1 style={title}>{props.title}</h1></a>
             </div>
             <div style={{margin: '15px'}}>
                 <LoginForm />
@@ -15,7 +15,7 @@ export default function Header(props) {
     ) : (
         <div style={headerDiv}>
             <div style={{margin: '15px'}}>
-                <h1 style={title}>{props.title}</h1>
+                <a href='/' style={{textDecoration: 'none'}}><h1 style={title}>{props.title}</h1></a>
             </div>
         </div>
     );
