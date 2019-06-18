@@ -1,7 +1,8 @@
 import React from 'react'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Redirect} from 'react-router-dom'
+import { Redirect} from 'react-router-dom';
+import { Button, Spinner } from 'reactstrap';
 import axios from 'axios';
 
 export class Dashboard extends React.Component {   
