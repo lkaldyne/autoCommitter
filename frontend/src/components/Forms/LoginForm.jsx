@@ -14,11 +14,15 @@ export default class LoginForm extends React.Component {
     login = (e) => {
         e.preventDefault();
         const {username, password} = this.state;
-        axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
+        axios.defaults.withCredentials = true; 
+        axios("http://localhost:5000/api/profiles/login", {
+            method: "post",
+            data: { username, password }
+        })
         .then(res => {
             this.setState(() => ({
-                    toDashboard: true,
-                }))
+                toDashboard: true,
+            }))
         })
         .catch(res => {
             this.setState(() => ({

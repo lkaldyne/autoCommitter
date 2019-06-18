@@ -3,57 +3,44 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Redirect} from 'react-router-dom'
 import axios from 'axios';
+import { Button } from 'reactstrap';
 
 export class Dashboard extends React.Component {   
     state = {
-        loggedIn: true
+        loggedIn: true,
+        user: {}
     }
 
     componentDidMount = () => {
-        // axios.defaults.withCredentials = true; 
-        // axios.get(`http://localhost:5000/api/profiles/user`)
-        //     .then(res => {
-        //         console.log(res);
-        //     })
-        //     .catch(res => {
-        //         console.log("failed");
-        //         this.setState({loggedIn: false});
-        //     })
-        // const transport = axios.create({
-        //     withCredentials: true,
-        //     baseURL: 'http://localhost:5000',
-        //   })
-          
-        //   transport
-        //     .get('/api/profiles/user')
-        //     .then(res => console.log(res))
-        //     .catch(err => { console.log(err) })
-    
-        // fetch('http://localhost:5000/api/profiles/user', {credentials: "same-origin"})
-        // .then(res => console.log(res))
-        // .catch(err => console.log(err));
-
-        axios('http://localhost:5000/api/profiles/user', { 
-            method: 'get',
-            withCredentials: true 
-          })
-          .then((response) => {
-            if (response.status === 200) {
-              console.log(response); 
-            } else {
-              return false;
-            }
-          });
-
+      axios.defaults.withCredentials = true; 
+      axios('http://localhost:5000/api/profiles/user', { 
+          method: 'get'
+        })
+        .then((response) => this.setState({ user: response.data.User }))
+        .catch((err) => this.setState({loggedIn: false}))
     }
 
+    tempLogout = () => {
+      axios.defaults.withCredentials = true; 
+      axios('http://localhost:5000/api/profiles/logout', { 
+          method: 'post'
+        })
+        .then((response) => this.setState({loggedIn: false}))
+        .catch((err) => console.log(err))
+    }
 
     render() {
         return (
             this.state.loggedIn ? (
             <React.Fragment>
                 <Header title='AutoCommitter' isHomepage={false}/>
-                {/* <PageContainer /> */}
+                <h1>Email:</h1>
+                <h3>{this.state.user ? this.state.user.username : "Loading"}</h3>
+                <h1>ID:</h1>
+                <h3>{this.state.user ? this.state.user._id : "Loading"}</h3>
+                <h1>Github Token:</h1>
+                <h3>{this.state.user ? this.state.user.github_token : "Loading"}</h3>
+                <Button onClick={this.tempLogout}>Logout</Button>
                 <Footer />
             </React.Fragment>
             ) : (

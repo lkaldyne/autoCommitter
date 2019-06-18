@@ -33,7 +33,6 @@ export function configurePassport(passport: any) {
 }
 
 export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
-    console.log(req.headers); 
     if (req.isAuthenticated()) {
         return next();
     } else {

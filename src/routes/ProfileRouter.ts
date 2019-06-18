@@ -47,13 +47,12 @@ router.post('/register', async (req: Request, res: Response) => {
 });
 
 router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
-  console.log('wero')
-  let github_decrypted_token = crypto_utils.decrypt(req.user.github_token);
-  req.user.github_token = github_decrypted_token;
-
+  let user: any =  new Object(JSON.parse(JSON.stringify(req.user)));
+  user.github_token = crypto_utils.decrypt(user.github_token);
+  delete user.password;
   res.json(
     {
-      User: req.user,
+      User: user,
       status: "SUCCESS"
     });
 });
