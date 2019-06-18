@@ -2,35 +2,34 @@ import React from 'react'
 import { PageContainer } from '../components/PageContainer';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import { Redirect} from 'react-router-dom'
-import axios from 'axios';
+import { BrowserRouter, Route, Redirect} from 'react-router-dom'
 
 export class HomePage extends React.Component {
-
-  state = {
-    loggedIn: false
-  }
-
-  componentDidMount = () => {
-    axios.defaults.withCredentials = true; 
-    axios('http://localhost:5000/api/profiles/user', { 
-        method: 'get'
-      })
-      .then((response) => this.setState({ loggedIn: true }))
-      .catch((err) => this.setState({loggedIn: false}))
+  loggedIn = () => {
+    // check session/application data
+    return true;
   }
 
   render() {
     return (
-      this.state.loggedIn ? <Redirect to="/dashboard" /> 
-      : 
-      (
         <React.Fragment>
-          <Header title='AutoCommitter' isHomepage={true}/>
-          <PageContainer />
-          <Footer />
+          <BrowserRouter>
+            <Header title='AutoCommitter' />
+            <Route exact path="/" render={() => (
+                  <PageContainer />
+            )}/>
+            <Route exact path="/dashboard" render={() => (
+              this.loggedIn ? (
+                <React.Fragment>
+                </React.Fragment>
+              ) : (
+                <Redirect push to="/" />
+              )
+            )}/>
+            <Footer />
+          </BrowserRouter>
         </React.Fragment>
-      )
+
     )
   }
 }

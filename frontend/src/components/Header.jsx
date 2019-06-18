@@ -2,8 +2,9 @@ import React from 'react'
 import LoginForm from '../components/Forms/LoginForm';
 import PropTypes from 'prop-types';
 import { Popover, PopoverHeader, PopoverBody } from 'reactstrap';
+import { withRouter } from 'react-router-dom'
 
-export default class Header extends React.Component {
+class Header extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -19,14 +20,13 @@ export default class Header extends React.Component {
     }
 
     render() {
-
         let titleElement = (
             <div style={{margin: '15px'}}>
                 <a href='/' style={{textDecoration: 'none'}}><h1 style={title}>{this.props.title}</h1></a>
             </div>
         )
 
-        return this.props.isHomepage ? (
+        return this.props.location.pathname !== '/dashboard' ? (
             <div style={headerDiv}>
                 {titleElement}
                 <div style={{margin: '15px'}}>
@@ -46,12 +46,12 @@ export default class Header extends React.Component {
                         this.setState({ isLoginHovered: false});
                     }}
                 >
-                    <img style={userIconStyle} src='\userIcon.png' />
+                    <img style={userIconStyle} src='\userIcon.png' alt="User Icon"/>
                     <p style={{margin: '5px 10px 0 15px'}} className={`text-${this.state.isLoginHovered ? 'success' : null}`}>{this.props.userEmail}</p>
                     <Popover placement="bottom" isOpen={this.state.popoverOpen} target="LogoutPopover" toggle={this.toggle}>
                         <PopoverHeader>What would you like to do?</PopoverHeader>
                         <PopoverBody>
-                            <a href='' onClick={this.props.userLogout}>LogOut</a>
+                            <a href='/' onClick={this.props.userLogout}>LogOut</a>
                         </PopoverBody>
                     </Popover>
                 </div>
@@ -59,6 +59,8 @@ export default class Header extends React.Component {
         );
     }   
 }
+
+export default withRouter(Header);
 
 const headerDiv = {
     display: 'flex',

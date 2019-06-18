@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Redirect} from 'react-router-dom'
+import { BrowserRouter, Route} from 'react-router-dom'
 import { HomePage } from '../pages/HomePage';
 import { Dashboard } from '../pages/Dashboard';
 

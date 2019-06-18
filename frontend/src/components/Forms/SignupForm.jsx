@@ -80,7 +80,7 @@ export default class SignupForm extends React.Component {
                     </div>
                     </Form>
                 </div>
-            : <Redirect to='/dashboard' />
+            : <Redirect push to='/dashboard' />
     }
   }
 

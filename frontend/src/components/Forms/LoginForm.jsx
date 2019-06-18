@@ -50,7 +50,7 @@ export default class LoginForm extends React.Component {
                 </FormGroup>
                 {' '}
                 <Button>Login</Button>
-            </Form> : <Redirect to='/dashboard' />
+            </Form> : <Redirect push to='/dashboard' />
     }
   }
 

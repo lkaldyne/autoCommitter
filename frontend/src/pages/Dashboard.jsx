@@ -3,7 +3,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Redirect} from 'react-router-dom'
 import axios from 'axios';
-import { Button } from 'reactstrap';
 
 export class Dashboard extends React.Component {   
     state = {
@@ -39,7 +38,7 @@ export class Dashboard extends React.Component {
                 <Footer />
             </React.Fragment>
             ) : (
-            <Redirect to="/" />
+            <Redirect push to="/" />
             )
         )
     }
