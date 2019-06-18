@@ -7,7 +7,21 @@ import axios from 'axios';
 export class Dashboard extends React.Component {   
     state = {
         loggedIn: true,
-        user: {}
+        user: {},
+        commitLoading: false
+    }
+
+    userManualCommit = () => {
+        this.setState({commitLoading: true});
+        axios.defaults.withCredentials = true; 
+        axios('http://localhost:5000/api/profiles/commitOneUser', { 
+            method: 'post'
+        })
+        .then((response) => {
+            this.setState({commitLoading: false});
+            alert("Commit Successful");
+        })
+        .catch((err) => alert(err))
     }
 
     componentDidMount = () => {
@@ -35,6 +49,15 @@ export class Dashboard extends React.Component {
                 <Header title='AutoCommitter' isHomepage={false} userEmail={this.state.user.username} userLogout={this.logout}/>
                 <h3>Github Token:</h3>
                 <p>{this.state.user ? this.state.user.github_token : "Loading"}</p>
+                {
+                    this.state.commitLoading ? 
+                        <React.Fragment>
+                            <Button disabled>Commit Now (Manually)</Button>
+                            <Spinner type="grow" color="dark" />
+                        </React.Fragment>
+                    :
+                        <Button onClick={this.userManualCommit}>Commit Now (Manually)</Button>
+                }
                 <Footer />
             </React.Fragment>
             ) : (
