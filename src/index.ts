@@ -71,28 +71,3 @@ const port = process.env.PORT || 5000;
 app.listen(port, () => {
     console.log('Listening on port ' + port);
 });
-
-// Sample usage code for Account
-
-/*let newAccount = new Account({
-    username: "",
-    email: "",
-    ghPersonalKey: "",
-    maxNumberOfCommitsPerDay: #,
-    commitDaysPerWeek: #
-});
-newAccount.clone(() => {
-    newAccount.alterFile(() => {
-        newAccount.stage(() => {
-            newAccount.commit(() => {
-                console.log("committed");
-                newAccount.push(() => {
-                    console.log("pushed");
-                    newAccount.removeRepo(() => {
-                        console.log("removed repo");
-                    })
-                });
-            });
-        });
-    });    
-});*/
