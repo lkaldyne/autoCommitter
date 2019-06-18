@@ -20,7 +20,7 @@ export class Dashboard extends React.Component {
         .catch((err) => this.setState({loggedIn: false}))
     }
 
-    tempLogout = () => {
+    logout = () => {
       axios.defaults.withCredentials = true; 
       axios('http://localhost:5000/api/profiles/logout', { 
           method: 'post'
@@ -33,14 +33,9 @@ export class Dashboard extends React.Component {
         return (
             this.state.loggedIn ? (
             <React.Fragment>
-                <Header title='AutoCommitter' isHomepage={false}/>
-                <h1>Email:</h1>
-                <h3>{this.state.user ? this.state.user.username : "Loading"}</h3>
-                <h1>ID:</h1>
-                <h3>{this.state.user ? this.state.user._id : "Loading"}</h3>
-                <h1>Github Token:</h1>
-                <h3>{this.state.user ? this.state.user.github_token : "Loading"}</h3>
-                <Button onClick={this.tempLogout}>Logout</Button>
+                <Header title='AutoCommitter' isHomepage={false} userEmail={this.state.user.username} userLogout={this.logout}/>
+                <h3>Github Token:</h3>
+                <p>{this.state.user ? this.state.user.github_token : "Loading"}</p>
                 <Footer />
             </React.Fragment>
             ) : (
