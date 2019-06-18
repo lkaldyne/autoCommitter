@@ -31,12 +31,18 @@ export default class SignupForm extends React.Component {
         const {username, password, github_token} = this.state;
         axios.post(`http://localhost:5000/api/profiles/register`, {username, password, github_token})
         .then(res => {
-            axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
-            .then(res => {
+            if (res.status === 200) {
+                axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
+                .then(res => {
+                    this.setState(() => ({
+                            toDashboard: true,
+                        }))
+                })
+            } else {
                 this.setState(() => ({
-                        toDashboard: true,
-                    }))
-            })
+                    errorMessage: 'Unexpected error.'
+                }))
+            }
         })
         .catch(res => {
             this.setState(() => ({
@@ -58,11 +64,11 @@ export default class SignupForm extends React.Component {
                     <Form onSubmit={this.register} method="POST">
                     <FormGroup>
                         <Label for="exampleEmail">Email</Label>
-                        <Input type="email" name="username" id="username" placeholder="" onChange={this.handleChange} required/>
+                        <Input type="email" name="username" id="username1" placeholder="" onChange={this.handleChange} required/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="examplePassword">Password</Label>
-                        <Input type="password" name="password" id="password" placeholder="" onChange={this.handleChange} required/>
+                        <Input type="password" name="password" id="password1" placeholder="" onChange={this.handleChange} required/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="examplePassword">GitHub Access Token <a style={{fontSize: '12px'}} href='https://medium.com/@katekimani/accessing-github-https-repos-without-typing-credentials-everytime-d0e4657de9dc' target="__blank">What's this?</a></Label>
