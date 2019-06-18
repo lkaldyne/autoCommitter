@@ -4,6 +4,8 @@ import passport from 'passport';
 import { NextFunction } from 'connect';
 import { ensureAuthenticated } from '../utils/passport';
 import * as crypto_utils from '../utils/Encrypt';
+import Account from '../utils/Account';
+import GitTools from '../utils/GitTools';
 
 
 const router: Router = Router();
@@ -56,6 +58,32 @@ router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
       status: "SUCCESS"
     });
 });
+
+router.post('/commitOneUser', async (req: Request, res: Response) => {
+  const { username, github_token } = req.user;
+  let dec_github_token: string = crypto_utils.decrypt(github_token);
+  console.log(dec_github_token);
+  let newAccount = new Account({
+    email: username,
+    ghPersonalKey: dec_github_token
+  });
+  GitTools.commitOneUser(newAccount, () => {
+    if(newAccount.error) {
+      res.status(400).json(
+        {
+          description: newAccount.errorMsg,
+          status: "FAILURE"
+        });
+      return;
+    }
+    else {
+      res.status(200).json(
+        {
+          status: "SUCCESS"
+        });
+    }
+  });
+})
 
 router.get('/invalidSession', (req: Request, res: Response) => {
   res.status(400).json(
