@@ -5,27 +5,31 @@ const git = require('simple-git/promise');
 const rmdir = require('rmdir');
 
 export interface IAccountInfo {
-    username: string,
     email: string,
     ghPersonalKey: string,
-    maxNumberOfCommitsPerDay: number,
-    commitDaysPerWeek: number
 }
 
 export default class Account {
     private remote: string;
     private info: IAccountInfo;
+    public error: boolean = false;
+    public errorMsg : string = '';
+    maxNumberOfCommitsPerDay: number;
+    commitDaysPerWeek: number;
 
     constructor(info: IAccountInfo) {
         this.info = info
-        this.remote = `https://${this.info.username}:${this.info.ghPersonalKey}@${repoUrl}`;
+        this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
     }
 
-    private errorHandler(err: any) {
+    private errorHandler(err: any, callback: () => void) {
+        this.error = true;
+        this.errorMsg = err;
         console.error('failed: ', err)
+        callback();
     }
 
-    public clone(callback: () => void): void {       
+    public clone(callback: () => void, errCallback: () => void): void {       
         git()
         .silent(true)
         .clone(this.remote)
@@ -33,10 +37,10 @@ export default class Account {
             console.log("cloned");
             callback();
         })
-        .catch(this.errorHandler);
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public stage(callback: () => void) {
+    public stage(callback: () => void, errCallback: () => void) {
         git(repoPath)
         .silent(true)
         .add([commitFile])
@@ -44,7 +48,7 @@ export default class Account {
             console.log("staged");
             callback();
         })
-        .catch(this.errorHandler);
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
     public alterFile(callback: () => void): void {
@@ -54,20 +58,20 @@ export default class Account {
         });
     }
 
-    public commit(callback: () => void) {
+    public commit(callback: () => void, errCallback: () => void) {
         git(repoPath)
         .silent(true)
         .commit("commit", {
-            '--author': `${this.info.username}<${this.info.email}>`
+            '--author': `test<${this.info.email}>`
         })
         .then(() => {
             console.log("file committed")
             callback()
         })
-        .catch(this.errorHandler);
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public push(callback: () => void) {
+    public push(callback: () => void, errCallback: () => void) {
         git(repoPath)
         .silent(true)
         .push(this.remote, "master")
@@ -75,7 +79,7 @@ export default class Account {
             console.log("pushed")
             callback()
         })
-        .catch(this.errorHandler);
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
     public removeRepo(callback: () => void) {
@@ -86,10 +90,10 @@ export default class Account {
     }
 
     public shouldTheyCommitToday(): boolean {
-        return ((this.info.commitDaysPerWeek / 7) >= Math.random())
+        return ((this.commitDaysPerWeek / 7) >= Math.random())
     }
 
     public getNumberOfCommits(): number {
-        return (this.info.maxNumberOfCommitsPerDay * Math.random())
+        return (this.maxNumberOfCommitsPerDay * Math.random())
     }
 }
