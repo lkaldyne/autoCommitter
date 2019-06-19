@@ -15,7 +15,7 @@ export class Dashboard extends React.Component {
     userManualCommit = () => {
         this.setState({commitLoading: true});
         axios.defaults.withCredentials = true; 
-        axios('http://localhost:5000/api/profiles/commitOneUser', { 
+        axios('/api/profiles/commitOneUser', { 
             method: 'post'
         })
         .then((response) => {
@@ -27,7 +27,7 @@ export class Dashboard extends React.Component {
 
     componentDidMount = () => {
       axios.defaults.withCredentials = true; 
-      axios('http://localhost:5000/api/profiles/user', { 
+      axios('/api/profiles/user', { 
           method: 'get'
         })
         .then((response) => this.setState({ user: response.data.User }))
@@ -36,7 +36,7 @@ export class Dashboard extends React.Component {
 
     logout = () => {
       axios.defaults.withCredentials = true; 
-      axios('http://localhost:5000/api/profiles/logout', { 
+      axios('/api/profiles/logout', { 
           method: 'post'
         })
         .then((response) => this.setState({loggedIn: false}))
