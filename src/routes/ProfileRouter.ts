@@ -59,7 +59,7 @@ router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
     });
 });
 
-router.post('/commitOneUser', async (req: Request, res: Response) => {
+router.post('/commitOneUser', ensureAuthenticated, (req: Request, res: Response) => {
   try {
     const { username, github_token } = req.user;
     let dec_github_token: string = crypto_utils.decrypt(github_token);
