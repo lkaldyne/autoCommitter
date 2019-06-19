@@ -25,6 +25,7 @@ export default class Account {
     private errorHandler(err: any, callback: () => void) {
         this.error = true;
         this.errorMsg = err;
+        console.error('failed: ', err)
         callback();
     }
 
@@ -33,9 +34,10 @@ export default class Account {
         .silent(true)
         .clone(this.remote)
         .then(() => {
+            console.log("cloned");
             callback();
         })
-        .catch((error: any) => this.errorHandler(error, errCallback));
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
     public stage(callback: () => void, errCallback: () => void) {
@@ -43,18 +45,16 @@ export default class Account {
         .silent(true)
         .add([commitFile])
         .then(() => {
+            console.log("staged");
             callback();
         })
-        .catch((error: any) => this.errorHandler(error, errCallback));
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public alterFile(callback: () => void, errCallback: () => void): void {
+    public alterFile(callback: () => void): void {
         FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
-            if (err) {
-                this.errorHandler(err, errCallback)
-            } else {
-                callback();
-            }
+            console.log("file modified");
+            callback();
         });
     }
 
@@ -65,9 +65,10 @@ export default class Account {
             '--author': `test<${this.info.email}>`
         })
         .then(() => {
+            console.log("file committed")
             callback()
         })
-        .catch((error: any) => this.errorHandler(error, errCallback));
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
     public push(callback: () => void, errCallback: () => void) {
@@ -75,13 +76,15 @@ export default class Account {
         .silent(true)
         .push(this.remote, "master")
         .then(() => {
+            console.log("pushed")
             callback()
         })
-        .catch((error: any) => this.errorHandler(error, errCallback));
+        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
     public removeRepo(callback: () => void) {
         rmdir(repoPath, () => {
+            console.log("repo deleted")
             callback()
         });
     }
