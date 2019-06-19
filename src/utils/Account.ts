@@ -22,10 +22,10 @@ export default class Account {
         this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
     }
 
-    private errorHandler(err: any, callback: (message: string) => void) {
+    private errorHandler(err: any, callback: () => void) {
         this.error = true;
         this.errorMsg = err;
-        callback(`failed: ${err}`);
+        callback();
     }
 
     public clone(callback: () => void, errCallback: () => void): void {       
