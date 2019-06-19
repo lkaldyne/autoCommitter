@@ -51,8 +51,11 @@ export default class Account {
         .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public alterFile(callback: () => void): void {
+    public alterFile(callback: () => void, errCallback: () => void): void {
         FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
+            if (err) {
+                this.errorHandler(err, errCallback);
+            }
             console.log("file modified");
             callback();
         });
