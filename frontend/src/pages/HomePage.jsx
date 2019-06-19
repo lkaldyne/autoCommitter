@@ -13,7 +13,7 @@ export class HomePage extends React.Component {
 
   componentDidMount = () => {
     axios.defaults.withCredentials = true; 
-    axios('http://localhost:5000/api/profiles/user', { 
+    axios('/api/profiles/user', { 
         method: 'get'
       })
       .then((response) => this.setState({ loggedIn: true }))

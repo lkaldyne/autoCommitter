@@ -15,7 +15,7 @@ export default class LoginForm extends React.Component {
         e.preventDefault();
         const {username, password} = this.state;
         axios.defaults.withCredentials = true; 
-        axios("http://localhost:5000/api/profiles/login", {
+        axios("/api/profiles/login", {
             method: "post",
             data: { username, password }
         })

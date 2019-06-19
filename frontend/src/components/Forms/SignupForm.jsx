@@ -29,14 +29,14 @@ export default class SignupForm extends React.Component {
     register = (e) => {
         e.preventDefault();
         const {username, password, github_token} = this.state;
-        axios.post(`http://localhost:5000/api/profiles/register`, {username, password, github_token})
+        axios.post(`/api/profiles/register`, {username, password, github_token})
         .then(res => {
             if (res.status === 200) {
-                axios.post(`http://localhost:5000/api/profiles/login`, {username, password})
+                axios.post(`/api/profiles/login`, {username, password})
                 .then(res => {
                     this.setState(() => ({
-                            toDashboard: true,
-                        }))
+                        toDashboard: true,
+                    }))
                 })
             } else {
                 this.setState(() => ({
@@ -53,40 +53,40 @@ export default class SignupForm extends React.Component {
 
     render() {
         return this.state.toDashboard === false ? 
-                <div style={signupWrapper}>
-                    <Modal isOpen={this.state.termsConditionsModal} toggle={this.toggle}>
-                        <ModalHeader toggle={this.toggle}>AutoCommitter Terms and Conditions</ModalHeader>
-                        <ModalBody>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </ModalBody>
-                    </Modal>
-                    <h1 style={{paddingBottom: '15px'}}>Sign Up</h1>
-                    <Form onSubmit={this.register} method="POST">
-                    <FormGroup>
-                        <Label for="exampleEmail">Email</Label>
-                        <Input type="email" name="username" id="username1" placeholder="" onChange={this.handleChange} required/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="examplePassword">Password</Label>
-                        <Input type="password" name="password" id="password1" placeholder="" onChange={this.handleChange} required/>
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="examplePassword">GitHub Access Token <a style={{fontSize: '12px'}} href='https://medium.com/@katekimani/accessing-github-https-repos-without-typing-credentials-everytime-d0e4657de9dc' target="__blank">What's this?</a></Label>
-                        <Input type="password" name="github_token" id="github_token" placeholder="" onChange={this.handleChange} required/>
-                    </FormGroup>
-                    <FormGroup check>
-                        <Label check>
-                        <Input type="checkbox" required />{' '}
-                        I agree to the <a href='#' onClick={this.toggle}>terms and conditions.</a>
-                        </Label>
-                    </FormGroup>
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '15px'}}>
-                        <Button>Submit</Button>
-                        <p style={{color:'#b50707', margin: '0'}}>{this.state.errorMessage}</p>
-                    </div>
-                    </Form>
+            <div style={signupWrapper}>
+                <Modal isOpen={this.state.termsConditionsModal} toggle={this.toggle}>
+                    <ModalHeader toggle={this.toggle}>AutoCommitter Terms and Conditions</ModalHeader>
+                    <ModalBody>
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </ModalBody>
+                </Modal>
+                <h1 style={{paddingBottom: '15px'}}>Sign Up</h1>
+                <Form onSubmit={this.register} method="POST">
+                <FormGroup>
+                    <Label for="exampleEmail">Email</Label>
+                    <Input type="email" name="username" id="username1" placeholder="" onChange={this.handleChange} required/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="examplePassword">Password</Label>
+                    <Input type="password" name="password" id="password1" placeholder="" onChange={this.handleChange} required/>
+                </FormGroup>
+                <FormGroup>
+                    <Label for="examplePassword">GitHub Access Token <a style={{fontSize: '12px'}} href='https://medium.com/@katekimani/accessing-github-https-repos-without-typing-credentials-everytime-d0e4657de9dc' target="__blank">What's this?</a></Label>
+                    <Input type="password" name="github_token" id="github_token" placeholder="" onChange={this.handleChange} required/>
+                </FormGroup>
+                <FormGroup check>
+                    <Label check>
+                    <Input type="checkbox" required />{' '}
+                    I agree to the <a href='#' onClick={this.toggle}>terms and conditions.</a>
+                    </Label>
+                </FormGroup>
+                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '15px'}}>
+                    <Button>Submit</Button>
+                    <p style={{color:'#b50707', margin: '0'}}>{this.state.errorMessage}</p>
                 </div>
-            : <Redirect push to='/dashboard' />
+                </Form>
+            </div>
+        : <Redirect push to='/dashboard' />
     }
   }
 
