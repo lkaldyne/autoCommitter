@@ -16,7 +16,7 @@ export default class GitTools {
                         }, callback);
                     }, callback);
                 }, callback);
-            });    
+            }, callback);    
         }, callback);
 
     }

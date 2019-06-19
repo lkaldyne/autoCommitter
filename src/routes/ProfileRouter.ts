@@ -60,29 +60,36 @@ router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
 });
 
 router.post('/commitOneUser', async (req: Request, res: Response) => {
-  const { username, github_token } = req.user;
-  let dec_github_token: string = crypto_utils.decrypt(github_token);
-  console.log(dec_github_token);
-  let newAccount = new Account({
-    email: username,
-    ghPersonalKey: dec_github_token
-  });
-  GitTools.commitOneUser(newAccount, () => {
-    if(newAccount.error) {
-      res.status(400).json(
-        {
-          description: newAccount.errorMsg,
-          status: "FAILURE"
-        });
-      return;
-    }
-    else {
-      res.status(200).json(
-        {
-          status: "SUCCESS"
-        });
-    }
-  });
+  try {
+    const { username, github_token } = req.user;
+    let dec_github_token: string = crypto_utils.decrypt(github_token);
+    console.log(dec_github_token);
+    let newAccount = new Account({
+      email: username,
+      ghPersonalKey: dec_github_token
+    });
+    GitTools.commitOneUser(newAccount, () => {
+      if(newAccount.error) {
+        res.status(400).json(
+          {
+            description: newAccount.errorMsg,
+            status: "FAILURE"
+          });
+        return;
+      }
+      else {
+        res.status(200).json(
+          {
+            status: "SUCCESS"
+          });
+      }
+    });
+  } catch (err) {
+    res.status(400).json({
+      description: err.toString(),
+      status: "FAILURE"
+    });
+  }
 })
 
 router.get('/invalidSession', (req: Request, res: Response) => {
