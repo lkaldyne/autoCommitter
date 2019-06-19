@@ -89,6 +89,7 @@ router.post('/commitOneUser', async (req: Request, res: Response) => {
       description: err.toString(),
       status: "FAILURE"
     });
+    return;
   }
 })
 
