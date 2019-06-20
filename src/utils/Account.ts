@@ -21,70 +21,50 @@ export default class Account {
       this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
     }
 
-    public clone(callback: (err?: string) => void): void {
-      git()
+    public async clone() {
+      return git()
         .silent(true)
         .clone(this.remote)
-        .then(() => {
-          callback();
-        })
-        .catch((error: any) => {
-          callback(error);
-        });
     }
 
-    public stage(callback: (err?: string) => void) {
-      git(repoPath)
+    public stage() {
+      return git(repoPath)
         .silent(true)
         .add([commitFile])
-        .then(() => {
-          callback();
-        })
-        .catch((error: any) => {
-          callback(error);
+    }
+
+    public alterFile() {
+      return new Promise((resolve, reject) => {
+        FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
         });
+      })
     }
 
-    public alterFile(callback: (err?: string) => void): void {
-      FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
-        if (err) {
-          callback(err);
-        } else {
-          callback();
-        }
-      });
-    }
-
-    public commit(callback: (err?: string) => void) {
-      git(repoPath)
+    public async commit() {
+      return git(repoPath)
         .silent(true)
         .commit('commit', {
           '--author': `test<${this.info.email}>`,
         })
-        .then(() => {
-          callback();
-        })
-        .catch((error: any) => {
-          callback(error);
-        });
     }
 
-    public push(callback: (err?: string) => void) {
-      git(repoPath)
+    public push() {
+      return git(repoPath)
         .silent(true)
         .push(this.remote, 'master')
-        .then(() => {
-          callback();
-        })
-        .catch((error: any) => {
-          callback(error);
-        });
     }
 
-    public removeRepo(callback: (err?: string) => void) {
-      rmdir(repoPath, () => {
-        callback();
-      });
+    public removeRepo() {
+      return new Promise((resolve, reject) => {
+        rmdir(repoPath, () => {
+          resolve();
+        });
+      })
     }
 
     public shouldTheyCommitToday(): boolean {

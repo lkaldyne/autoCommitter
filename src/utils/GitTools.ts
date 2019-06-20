@@ -1,49 +1,13 @@
 import Account from './Account';
+import { response } from 'express';
 
 export default class GitTools {
-  public static commitOneUser(newAccount: Account, callback: (err?: string) => void): void {
-    newAccount.clone((cloneErr) => {
-      if (cloneErr) {
-        callback(cloneErr);
-      } else {
-        console.log('cloned');
-        newAccount.alterFile((alterErr) => {
-          if (alterErr) {
-            callback(alterErr);
-          } else {
-            console.log('altered file');
-            newAccount.stage((stageErr) => {
-              if (stageErr) {
-                callback(stageErr);
-              } else {
-                console.log('staged');
-                newAccount.commit((commitErr) => {
-                  if (commitErr) {
-                    callback(commitErr);
-                  } else {
-                    console.log('committed');
-                    newAccount.push((pushErr) => {
-                      if (commitErr) {
-                        callback(commitErr);
-                      } else {
-                        console.log('pushed');
-                        newAccount.removeRepo((removeErr) => {
-                          if (removeErr) {
-                            callback(removeErr);
-                          } else {
-                            console.log('removed repo');
-                            callback();
-                          }
-                        });
-                      }
-                    });
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    });
+  public static async commitOneUser(account: Account) {
+    await account.clone()
+    await account.alterFile()
+    await account.stage()
+    await account.commit()
+    await account.push()
+    await account.removeRepo()
   }
 }

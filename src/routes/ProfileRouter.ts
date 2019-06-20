@@ -51,29 +51,6 @@ router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
   );
 });
 
-router.post('/commitOneUser', ensureAuthenticated, (req: Request, res: Response) => {
-  try {
-    const { username, github_token } = req.user;
-    const ghPersonalKey: string = crypto_utils.decrypt(github_token);
-    console.log(ghPersonalKey);
-    const newAccount = new Account({
-      email: username,
-      ghPersonalKey,
-    });
-    GitTools.commitOneUser(newAccount, (err: any) => {
-      if (err) {
-        console.log(err)
-        APITools.respond(err, 500, res);
-      } else {
-        APITools.respond('Successfully committed', 200, res);
-      }
-    });
-  } catch (err) {
-    console.log(err)
-    APITools.respond(err.toString(), 500, res);
-  }
-});
-
 router.get('/invalidSession', (req: Request, res: Response) => {
   APITools.respond('There is no user in session.', 400, res);
 });
