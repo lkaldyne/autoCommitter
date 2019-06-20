@@ -5,35 +5,56 @@ import { repoPath, commitFile, repoUrl } from '../index';
 const git = require('simple-git/promise');
 const rmdir = require('rmdir');
 
+export enum NumWeekdays {
+  ONE = 1,
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
+  SIX = 6,
+  SEVEN = 7
+}
+
 export interface IAccountInfo {
     email: string,
     ghPersonalKey: string,
+    maxCommitsPerDay?: number,
+    maxCommitsPerWeek?: NumWeekdays
 }
 
 export default class Account {
     private remote: string;
     private info: IAccountInfo;
-    private maxNumberOfCommitsPerDay: number;
-    private commitDaysPerWeek: number;
 
     constructor(info: IAccountInfo) {
       this.info = info;
       this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
     }
 
+    public getMaxNumberOfCommitsPerDay() {
+      return this.info.maxCommitsPerDay
+    }
+
+    public getMaxNumberOfCommitsPerWeek() {
+      return this.info.maxCommitsPerWeek
+    }
+
     public async clone() {
+      this.log("Cloning")
       return git()
         .silent(true)
         .clone(this.remote)
     }
 
     public stage() {
+      this.log("Staging")
       return git(repoPath)
         .silent(true)
         .add([commitFile])
     }
 
     public alterFile() {
+      this.log("Altering File")
       return new Promise((resolve, reject) => {
         FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
           if (err) {
@@ -46,6 +67,7 @@ export default class Account {
     }
 
     public async commit() {
+      this.log("Committing")
       return git(repoPath)
         .silent(true)
         .commit('commit', {
@@ -54,12 +76,14 @@ export default class Account {
     }
 
     public push() {
+      this.log("Pushing")
       return git(repoPath)
         .silent(true)
         .push(this.remote, 'master')
     }
 
     public removeRepo() {
+      this.log("Removing Repo")
       return new Promise((resolve, reject) => {
         rmdir(repoPath, () => {
           resolve();
@@ -68,10 +92,14 @@ export default class Account {
     }
 
     public shouldTheyCommitToday(): boolean {
-      return ((this.commitDaysPerWeek / 7) >= Math.random());
+      return ((this.info.maxCommitsPerWeek / 7) >= Math.random());
     }
 
     public getNumberOfCommits(): number {
-      return (this.maxNumberOfCommitsPerDay * Math.random());
+      return Math.floor((this.info.maxCommitsPerDay * Math.random()));
+    }
+
+    public log(message: string): void {
+      console.log(`${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')} ${this.info.email} | ${message}`)
     }
 }
