@@ -10,6 +10,7 @@ import session from 'express-session';
 import cookieParser from 'cookie-parser';
 import mongoStore from 'connect-mongo';
 import path from "path";
+import { gitRouter } from './routes/GitRouter';
 
 export const commitFile: string =  "README.md";
 export const repoPath: string = path.join(".", "commitsRepo");
@@ -61,6 +62,7 @@ app.use(bodyParser.urlencoded({ extended:true }));
 app.use(bodyParser.json());
 
 app.use('/api/profiles', profileRouter);
+app.use('/api/git', gitRouter)
 
 app.use(express.static(path.join(__dirname, '..', 'frontend', 'build')));
 app.get('*', (req: Request, res: Response) => {
