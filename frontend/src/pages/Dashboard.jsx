@@ -2,15 +2,22 @@ import React from 'react'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Redirect} from 'react-router-dom';
-import { Button, Spinner, Col, Row, Card, CardHeader, CardBody } from 'reactstrap';
+import { Button, Spinner, Col, Row, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
 import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
+import GithubTokenForm from '../components/Forms/GithubTokenForm';
+import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm';
 
 export class Dashboard extends React.Component {   
     state = {
         loggedIn: true,
         user: {},
-        commitLoading: false
+        commitLoading: false,
+        passResetCollapse: false
+    }
+
+    toggleCollapse = () => {
+        this.setState(state => ({passResetCollapse: !state.passResetCollapse}));
     }
 
     parseUserName = (email) => {
@@ -53,13 +60,13 @@ export class Dashboard extends React.Component {
             this.state.loggedIn ? (
             <React.Fragment>
                 <Header title='AutoCommitter' isHomepage={false} userEmail={this.state.user.username} userLogout={this.logout}/>
-                <h3 style={{margin: '2vw 0 3vw 2vw'}}>{this.state.user.username ? `Welcome Back, ${this.parseUserName(this.state.user.username)}` : "Welcome Back"}</h3>
+                <h3 style={{margin: '2vw 0 3vw 2vw'}}>{this.state.user.username ? `Welcome back, ${this.parseUserName(this.state.user.username)}` : "Welcome back"}</h3>
                 <Row>
                     <Col md={8}>
                         <Card body style={adjustSettingsStyle}>
-                            <CardHeader>Adjust Your Settings</CardHeader>
+                            <CardHeader><h4>Adjust Your Settings</h4></CardHeader>
                             <CardBody>
-                                <Row>
+                                <Row style={cardRowStyle}>
                                     <Col sm={6} md={4}>
                                         Maximum Commits Per Day
                                     </Col>
@@ -75,7 +82,7 @@ export class Dashboard extends React.Component {
                                     />
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row style={cardRowStyle}>
                                     <Col sm={6} md={4}>
                                         Maximum Commits Per Week
                                     </Col>
@@ -91,7 +98,7 @@ export class Dashboard extends React.Component {
                                         />
                                     </Col>
                                 </Row>
-                                <Row>
+                                <Row style={cardRowStyle}>
                                     <Col sm={12} style={{textAlign:'right'}}>
                                         <Button color="secondary">Save Changes</Button>
                                     </Col>
@@ -99,20 +106,42 @@ export class Dashboard extends React.Component {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col md={4}>
-                        {                        
-                            this.state.commitLoading ? 
+                    <Col lg={4} md={12}>
+                        <Card style={adjustSettingsStyle}>
+                            <CardHeader>
                                 <Row>
-                                    <Col md={8}>
-                                        <Button disabled >Commit Now (Manually)</Button>
+                                    <Col style={{textAlign:"center"}} sm={6}>
+                                        {                        
+                                            this.state.commitLoading ?
+                                                <React.Fragment>
+                                                    <Button disabled>Commit Now (Manually)</Button>
+                                                    <Spinner className="align-middle" type="grow" color="dark" style={{marginLeft:'1vh'}}/>
+                                                </React.Fragment> 
+                                                
+                                            :
+                                                <Button onClick={this.userManualCommit}>Commit Now (Manually)</Button>
+                                        }
                                     </Col>
-                                    <Col md={4}>
-                                        <Spinner type="grow" color="dark" />
+                                    <Col style={{textAlign:"center"}} sm={6}>
+                                        <Button color="primary" onClick={this.toggleCollapse}>Forgot Password?</Button>
                                     </Col>
                                 </Row>
-                            :
-                                <Button onClick={this.userManualCommit}>Commit Now (Manually)</Button>
-                        }                                    
+                            </CardHeader>
+                            <CardBody>
+                                <Row>
+                                    <Col xs={12}>
+                                        <Collapse isOpen={this.state.passResetCollapse}>
+                                            <ForgotPasswordForm />
+                                        </Collapse>
+                                    </Col>
+                                </Row>
+                                <Row style={cardRowStyle}>
+                                    <Col xs={12}>
+                                        <GithubTokenForm githubToken={this.state.user.github_token}/>
+                                    </Col>
+                                </Row>
+                            </CardBody>
+                        </Card>
                     </Col>
                 </Row>
                 <Footer />
@@ -126,6 +155,14 @@ export class Dashboard extends React.Component {
 
 const adjustSettingsStyle = {
     margin: '0 2vw 0 2vw'
+}
+
+const cardRowStyle = {
+    marginTop: '2vh'
+}
+
+const passResetForm = {
+    marginRight: '7vw'
 }
 const marks = [
     {
