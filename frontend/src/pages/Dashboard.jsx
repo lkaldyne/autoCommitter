@@ -5,7 +5,6 @@ import { Redirect} from 'react-router-dom';
 import { Button, Spinner, Col, Row, Card, CardHeader, CardBody } from 'reactstrap';
 import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
-import DashboardSettings from '../components/DashboardSettings';
 
 export class Dashboard extends React.Component {   
     state = {
