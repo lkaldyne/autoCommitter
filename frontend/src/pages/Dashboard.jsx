@@ -7,6 +7,7 @@ import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
 import GithubTokenForm from '../components/Forms/GithubTokenForm';
 import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm';
+import { SettingsAdjustments } from '../components/SettingsAdjustments';
 
 export class Dashboard extends React.Component {   
     state = {
@@ -61,53 +62,17 @@ export class Dashboard extends React.Component {
             <React.Fragment>
                 <Header title='AutoCommitter' isHomepage={false} userEmail={this.state.user.username} userLogout={this.logout}/>
                 <h3 style={{margin: '2vw 0 3vw 2vw'}}>{this.state.user.username ? `Welcome back, ${this.parseUserName(this.state.user.username)}` : "Welcome back"}</h3>
-                <Row>
-                    <Col md={8}>
+                <Row style = {{width:'100%'}}>
+                    <Col lg={8} md={12}>
                         <Card body style={adjustSettingsStyle}>
                             <CardHeader><h4>Adjust Your Settings</h4></CardHeader>
                             <CardBody>
-                                <Row style={cardRowStyle}>
-                                    <Col sm={6} md={4}>
-                                        Maximum Commits Per Day
-                                    </Col>
-                                    <Col sm={6} md={8}>
-                                    <Slider
-                                        defaultValue={3}
-                                        max={7}
-                                        //getAriaValueText={valuetext}
-                                        aria-labelledby="discrete-slider-always"
-                                        valueLabelDisplay="auto"
-                                        step={1}
-                                        marks={marks}
-                                    />
-                                    </Col>
-                                </Row>
-                                <Row style={cardRowStyle}>
-                                    <Col sm={6} md={4}>
-                                        Maximum Commits Per Week
-                                    </Col>
-                                    <Col sm={6} md={8}>
-                                        <Slider
-                                            defaultValue={3}
-                                            max={7}
-                                            //getAriaValueText={valuetext}
-                                            aria-labelledby="discrete-slider-always"
-                                            valueLabelDisplay="auto"
-                                            step={1}
-                                            marks={marks}
-                                        />
-                                    </Col>
-                                </Row>
-                                <Row style={cardRowStyle}>
-                                    <Col sm={12} style={{textAlign:'right'}}>
-                                        <Button color="secondary">Save Changes</Button>
-                                    </Col>
-                                </Row>
+                                <SettingsAdjustments />
                             </CardBody>
                         </Card>
                     </Col>
                     <Col lg={4} md={12}>
-                        <Card style={adjustSettingsStyle}>
+                        <Card style = {adjustSettingsStyle}>
                             <CardHeader>
                                 <Row>
                                     <Col style={{textAlign:"center"}} sm={6}>
@@ -154,48 +119,9 @@ export class Dashboard extends React.Component {
 }
 
 const adjustSettingsStyle = {
-    margin: '0 2vw 0 2vw'
+    margin: '0 2vw 2vw 2vw'
 }
 
 const cardRowStyle = {
     marginTop: '2vh'
 }
-
-const passResetForm = {
-    marginRight: '7vw'
-}
-const marks = [
-    {
-        value: 0,
-        label: '0',
-    },
-    {
-        value: 1,
-        label: '1',
-    },
-    {
-        value: 2,
-        label: '2',
-    },
-    {
-        value: 3,
-        label: '3',
-    },
-    {
-        value: 4,
-        label: '4',
-    },
-    {
-        value: 5,
-        label: '5',
-    },
-    {
-        value: 6,
-        label: '6',
-    },
-    {
-        value: 7,
-        label: '7',
-    },
-  ];
-  
