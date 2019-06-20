@@ -68,6 +68,6 @@ export default class ForgotPasswordForm extends React.Component {
   }
 
   const signupWrapper = {
-      border: '1px solid #ccc',
+      borderBottom: '1px solid #ccc',
       padding: '30px'
   }
