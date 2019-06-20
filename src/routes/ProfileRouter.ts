@@ -1,11 +1,12 @@
 import { Router, Request, Response } from 'express';
-import { User, saveUser } from '../models/User';
 import passport from 'passport';
 import { NextFunction } from 'connect';
+import { User, saveUser } from '../models/User';
 import { ensureAuthenticated } from '../utils/passport';
 import * as crypto_utils from '../utils/Encrypt';
 import Account from '../utils/Account';
 import GitTools from '../utils/GitTools';
+import { APITools } from './APITools';
 
 
 const router: Router = Router();
@@ -13,108 +14,76 @@ const router: Router = Router();
 router.post('/login', (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate('local', {
     successRedirect: '/api/profiles/loginSuccess',
-    failureRedirect: '/api/profiles/loginFailure'
+    failureRedirect: '/api/profiles/loginFailure',
   })(req, res, next);
 });
 
 router.post('/logout', ensureAuthenticated, (req: Request, res: Response) => {
   req.logOut();
-  res.status(200).json(
-    {
-      description: "Successfully logged out.",
-      status: "SUCCESS"
-    });
+  APITools.respond('Successfully logged out.', 200, res);
 });
 
 router.post('/register', async (req: Request, res: Response) => {
-
-  let { username, password, github_token } = req.body;
+  const { username, password, github_token } = req.body;
   if (!username || !password || !github_token) {
-    res.status(200).json(
-      {
-        description: "Missing required field.",
-        status: "FAILURE"
-      });
-    return;
+    APITools.respond('Missing required field.', 400, res);
+  } else {
+    const newUser = new User({ username, password, github_token });
+    saveUser(newUser, (err: Error) => {
+      if (err) {
+        APITools.respond(err.message, 500, res);
+      } else {
+        APITools.respond('Successfully created new user.', 200, res);
+      }
+    });
   }
-  let newUser = new User({ username, password, github_token });
-  saveUser(newUser, (err: Error) => {
-    if (err) res.status(500).send({ err });
-    else res.status(200).json(
-      {
-        description: "Successfully created new user.",
-        status: "SUCCESS"
-      });
-  });
 });
 
 router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
-  let user: any =  new Object(JSON.parse(JSON.stringify(req.user)));
+  const user: any = new Object(JSON.parse(JSON.stringify(req.user)));
   user.github_token = crypto_utils.decrypt(user.github_token);
   delete user.password;
   res.json(
     {
       User: user,
-      status: "SUCCESS"
-    });
+      status: 'SUCCESS',
+    },
+  );
 });
 
 router.post('/commitOneUser', ensureAuthenticated, (req: Request, res: Response) => {
   try {
     const { username, github_token } = req.user;
-    let dec_github_token: string = crypto_utils.decrypt(github_token);
-    console.log(dec_github_token);
-    let newAccount = new Account({
+    const ghPersonalKey: string = crypto_utils.decrypt(github_token);
+    console.log(ghPersonalKey);
+    const newAccount = new Account({
       email: username,
-      ghPersonalKey: dec_github_token
+      ghPersonalKey,
     });
-    GitTools.commitOneUser(newAccount, () => {
-      if(newAccount.error) {
-        res.status(400).json(
-          {
-            description: newAccount.errorMsg,
-            status: "FAILURE"
-          });
-        return;
-      }
-      else {
-        res.status(200).json(
-          {
-            status: "SUCCESS"
-          });
+    GitTools.commitOneUser(newAccount, (err: any) => {
+      if (err) {
+        console.log(err)
+        APITools.respond(err, 500, res);
+      } else {
+        APITools.respond('Successfully committed', 200, res);
       }
     });
   } catch (err) {
-    res.status(400).json({
-      description: err.toString(),
-      status: "FAILURE"
-    });
-    return;
+    console.log(err)
+    APITools.respond(err.toString(), 500, res);
   }
-})
+});
 
 router.get('/invalidSession', (req: Request, res: Response) => {
-  res.status(400).json(
-    {
-      description: "There is no user in session.",
-      status: "FAILURE"
-    });
+  APITools.respond('There is no user in session.', 400, res);
 });
 
 router.get('/loginSuccess', (req: Request, res: Response) => {
-  res.status(200).json(
-    {
-      description: "Successfully logged in.",
-      status: "SUCCESS"
-    });
+  APITools.respond('Successfully logged in.', 200, res);
 });
 
 router.get('/loginFailure', (req: Request, res: Response) => {
-  res.status(400).json(
-    {
-      description: "Invalid credentials. There was an issue logging in to your account.",
-      status: "FAILURE"
-    });
+  APITools.respond('Invalid credentials. There was an issue logging in to your account.', 400, res);
 });
 
-export const profileRouter: Router = router
+export const profileRouter: Router = router;
