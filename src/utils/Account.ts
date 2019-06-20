@@ -12,11 +12,8 @@ export interface IAccountInfo {
 
 export default class Account {
     private remote: string;
-
     private info: IAccountInfo;
-
     private maxNumberOfCommitsPerDay: number;
-
     private commitDaysPerWeek: number;
 
     constructor(info: IAccountInfo) {
