@@ -7,10 +7,17 @@ import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
 
 export class Dashboard extends React.Component {   
+
+  defaults = {
+    commitValue: 3, 
+  }
+
   state = {
     loggedIn: true,
     user: {},
-    commitLoading: false
+    commitLoading: false,
+    commitsPerDay: this.defaults.commitValue,
+    commitsPerWeek: this.defaults.commitValue,
   }
 
   parseUserName = (email) => {
@@ -48,6 +55,17 @@ export class Dashboard extends React.Component {
     .catch((err) => console.log(err))
   }
 
+  updateCommitDetails = () => {
+    console.log(this.state);
+    axios.defaults.withCredentials = true; 
+    axios.put('/api/profiles/user', { 
+        commitsPerDay: this.state.commitsPerDay,
+        commitsPerWeek: this.state.commitsPerWeek,
+    })
+    .then((response) => alert('Successfully updated your settings'))
+    .catch((err) => console.log(err))
+  }
+
   render() {
     return (
       this.state.loggedIn ? (
@@ -76,7 +94,8 @@ export class Dashboard extends React.Component {
                       </Col>
                       <Col sm={6} md={8}>
                         <Slider
-                          defaultValue={3}
+                          onChange={(e, value) => this.setState({commitsPerDay: value})}
+                          defaultValue={this.defaults.commitValue}
                           max={7}
                           aria-labelledby="discrete-slider-always"
                           valueLabelDisplay="auto"
@@ -91,7 +110,8 @@ export class Dashboard extends React.Component {
                       </Col>
                       <Col sm={6} md={8}>
                           <Slider
-                            defaultValue={3}
+                            onChange={(e, value) => this.setState({commitsPerWeek: value})}
+                            defaultValue={this.defaults.commitValue}
                             max={7}
                             aria-labelledby="discrete-slider-always"
                             valueLabelDisplay="auto"
@@ -102,7 +122,7 @@ export class Dashboard extends React.Component {
                     </Row>
                     <Row>
                       <Col sm={12} style={{textAlign:'right'}}>
-                        <Button color="secondary">Save Changes</Button>
+                        <Button color="secondary" onClick={this.updateCommitDetails}>Save Changes</Button>
                       </Col>
                     </Row>
                   </CardBody>

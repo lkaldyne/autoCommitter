@@ -4,10 +4,7 @@ import { NextFunction } from 'connect';
 import { User, saveUser } from '../models/User';
 import { ensureAuthenticated } from '../utils/passport';
 import * as crypto_utils from '../utils/Encrypt';
-import Account from '../utils/Account';
-import GitTools from '../utils/GitTools';
 import { APITools } from './APITools';
-
 
 const router: Router = Router();
 
@@ -24,11 +21,12 @@ router.post('/logout', ensureAuthenticated, (req: Request, res: Response) => {
 });
 
 router.post('/register', async (req: Request, res: Response) => {
+  const defaultCommitNumber = 3;
   const { username, password, github_token } = req.body;
   if (!username || !password || !github_token) {
     APITools.respond('Missing required field.', 400, res);
   } else {
-    const newUser = new User({ username, password, github_token });
+    const newUser = new User({ username, password, github_token, commitsPerDay: defaultCommitNumber, commitsPerWeek: defaultCommitNumber });
     saveUser(newUser, (err: Error) => {
       if (err) {
         APITools.respond(err.message, 500, res);
@@ -49,6 +47,35 @@ router.get('/user', ensureAuthenticated, (req: Request, res: Response) => {
       status: 'SUCCESS',
     },
   );
+});
+
+router.put('/user', ensureAuthenticated, (req: Request, res: Response) => {
+  const { username, commitsPerDay, commitsPerWeek } = req.body;
+  if (username !== undefined && commitsPerDay !== undefined && commitsPerWeek !== undefined) return res.redirect('/auth/missingFieldError');
+  req.user.username = username !== undefined ? username : req.user.username;
+  req.user.commitsPerDay = commitsPerDay !== undefined ? commitsPerDay : req.user.commitsPerDay;
+  req.user.commitsPerWeek = commitsPerWeek !== undefined ? commitsPerWeek : req.user.commitsPerWeek;
+  req.user.save()
+    .then((user: any) => {
+      APITools.respond('Successfully updated user.', 200, res);
+    })
+    .catch((err: Error) => {
+      APITools.respond(err.toString() , 500, res);
+    });
+});
+
+router.delete('/user', ensureAuthenticated, (req: Request, res: Response) => {
+  User.findByIdAndDelete({ _id: req.user.id })
+    .then((user) => {
+      APITools.respond('Successfully deleted user.', 200, res);
+    })
+    .catch((err: Error) => {
+      APITools.respond(err.toString() , 500, res);
+    });
+});
+
+router.get('/missingFieldError', (req: Request, res: Response) => {
+  APITools.respond('Missing a required field.' , 400, res);
 });
 
 router.get('/invalidSession', (req: Request, res: Response) => {

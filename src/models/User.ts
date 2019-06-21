@@ -8,6 +8,8 @@ const UserSchema: mongoose.Schema<any> = new Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   github_token: { type: String, required: true },
+  commitsPerDay: { type: Number },
+  commitsPerWeek: { type: Number },
 });
 
 UserSchema.plugin(uniqueValidator);
@@ -17,6 +19,8 @@ export interface userModel {
     password: string,
     github_token: string,
     id: string
+    commitsPerDay: number,
+    commitsPerWeek: number,
     save: (err: Error) => void
 }
 
