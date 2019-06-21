@@ -26,7 +26,8 @@ router.get('/job', async (req: Request, res: Response) => {
     }
     APITools.respond('Successfully ran all accounts on commit job', 200, res)
   } catch(err) {
-    APITools.respond('Internal server error', 500, res)
+    console.log(err);
+    APITools.respond('Internal server error', 500, res);
   }
 })
 
