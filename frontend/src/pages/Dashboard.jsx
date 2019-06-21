@@ -3,7 +3,6 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Redirect} from 'react-router-dom';
 import { Button, Spinner, Col, Row, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
-import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
 import GithubTokenForm from '../components/Forms/GithubTokenForm';
 import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm';
@@ -61,19 +60,25 @@ export class Dashboard extends React.Component {
             this.state.loggedIn ? (
             <React.Fragment>
                 <Header title='AutoCommitter' isHomepage={false} userEmail={this.state.user.username} userLogout={this.logout}/>
-                <h3 style={{margin: '2vw 0 3vw 2vw'}}>{this.state.user.username ? `Welcome back, ${this.parseUserName(this.state.user.username)}` : "Welcome back"}</h3>
+                <h3 style={{margin: '2vw 0 3vw 2vw'}}>{this.state.user.username ? `Welcome back, ${this.parseUserName(this.state.user.username)}.` : "Welcome back."}</h3>
                 <Row style = {{width:'100%'}}>
                     <Col lg={8} md={12}>
                         <Card body style={adjustSettingsStyle}>
                             <CardHeader><h4>Adjust Your Settings</h4></CardHeader>
                             <CardBody>
                                 <SettingsAdjustments />
+                                <Row style={{marginTop:'3vw'}}>
+                                    <Col>
+                                        <p style={textStyle}>In order to achieve a realistic effect, AutoCommitter will not commit the exact amount of times specified in the sliders above. Instead, AutoCommitter commits <strong><i>up to</i></strong> the amount specified in order to keep it random</p>
+                                    </Col>
+                                </Row>
                             </CardBody>
                         </Card>
                     </Col>
                     <Col lg={4} md={12}>
                         <Card style = {adjustSettingsStyle}>
-                            <CardHeader>
+                            <CardHeader><h4>Account Settings and Manual Committing</h4></CardHeader>
+                            <CardBody>
                                 <Row>
                                     <Col style={{textAlign:"center"}} sm={6}>
                                         {                        
@@ -91,8 +96,6 @@ export class Dashboard extends React.Component {
                                         <Button color="primary" onClick={this.toggleCollapse}>Forgot Password?</Button>
                                     </Col>
                                 </Row>
-                            </CardHeader>
-                            <CardBody>
                                 <Row>
                                     <Col xs={12}>
                                         <Collapse isOpen={this.state.passResetCollapse}>
@@ -100,7 +103,7 @@ export class Dashboard extends React.Component {
                                         </Collapse>
                                     </Col>
                                 </Row>
-                                <Row style={cardRowStyle}>
+                                <Row style={{marginTop:'3vw'}}>
                                     <Col xs={12}>
                                         <GithubTokenForm githubToken={this.state.user.github_token}/>
                                     </Col>
@@ -109,6 +112,7 @@ export class Dashboard extends React.Component {
                         </Card>
                     </Col>
                 </Row>
+                
                 <Footer />
             </React.Fragment>
             ) : (
@@ -124,4 +128,9 @@ const adjustSettingsStyle = {
 
 const cardRowStyle = {
     marginTop: '2vh'
+}
+
+const textStyle = {
+    color : '#000647',
+    fontSize: '15px'
 }
