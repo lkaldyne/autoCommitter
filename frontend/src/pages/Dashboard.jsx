@@ -9,50 +9,71 @@ import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm';
 import { SettingsAdjustments } from '../components/SettingsAdjustments';
 
 export class Dashboard extends React.Component {   
-    state = {
-        loggedIn: true,
-        user: {},
-        commitLoading: false
-    }
+  state = {}
+  
+  constructor() {
+    super()
+    this.initialize();
+  }
 
-    toggleCollapse = () => {
-        this.setState(state => ({passResetCollapse: !state.passResetCollapse}));
+  initialize = () => {
+    this.state = {
+      loggedIn: true,
+      user: {},
+      commitLoading: false
     }
+  }
 
-    parseUserName = (email) => {
-        return email.split("@")[0];
-    }
+  toggleCollapse = () => {
+    this.setState(state => ({passResetCollapse: !state.passResetCollapse}));
+  }
 
-    userManualCommit = () => {
-        this.setState({commitLoading: true});
-        axios.defaults.withCredentials = true; 
-        axios('/api/profiles/commitOneUser', { 
-        method: 'post'
-        })
-        .then((response) => {
-        this.setState({commitLoading: false});
-        alert("Commit Successful");
-        })
-        .catch((err) => alert(err))
-    }
+  parseUserName = (email) => {
+    return email.split("@")[0];
+  }
 
-    componentDidMount = () => {
-        axios.defaults.withCredentials = true; 
-        axios('/api/profiles/user', { 
-        method: 'get'
-        })
-        .then((response) => this.setState({ user: response.data.User }))
-        .catch((err) => this.setState({loggedIn: false}))
-    }
+  userManualCommit = () => {
+    this.setState({commitLoading: true});
+    axios.defaults.withCredentials = true; 
+    axios('/api/git/commitOneUser', { 
+    method: 'post'
+    })
+    .then((response) => {
+    this.setState({commitLoading: false});
+    alert("Commit Successful");
+    })
+    .catch((err) => alert(err))
+  }
 
-    logout = () => {
-        axios.defaults.withCredentials = true; 
-        axios('/api/profiles/logout', { 
-        method: 'post'
-        })
-        .then((response) => this.setState({loggedIn: false}))
-        .catch((err) => console.log(err))
-    }
+  componentDidMount = () => {
+    axios.defaults.withCredentials = true; 
+    axios('/api/profiles/user', { 
+    method: 'get'
+    })
+    .then((response) => this.setState({ user: response.data.User }))
+    .catch((err) => this.setState({loggedIn: false}))
+  }
+
+  logout = () => {
+    axios.defaults.withCredentials = true; 
+    axios('/api/profiles/logout', { 
+    method: 'post'
+    })
+    .then((response) => this.setState({loggedIn: false}))
+    .catch((err) => console.log(err))
+  }
+
+  updateCommitsPerDay = (val) => {
+    const { user } = this.state;
+    user.commitsPerDay = val
+    this.setState({ user })
+  }
+
+  updateCommitsPerWeek = (val) => {
+    const { user } = this.state;
+    user.commitsPerWeek = val
+    this.setState({ user })
+  }
 
   render() {
     return (
@@ -62,6 +83,7 @@ export class Dashboard extends React.Component {
             title='AutoCommitter'
             isHomepage={false}
             userEmail={this.state.user.username}
+            stateClear={this.initialize}
             userLogout={this.logout}
           />
           <h3 style={{margin: '2vw 0 3vw 2vw'}}>
@@ -76,9 +98,11 @@ export class Dashboard extends React.Component {
                 <Card body style={adjustSettingsStyle}>
                   <CardHeader>Adjust Your Settings</CardHeader>
                   <CardBody>
-                    <SettingsAdjustments 
+                    <SettingsAdjustments
                         commitsPerDay={this.state.user.commitsPerDay} 
                         commitsPerWeek={this.state.user.commitsPerWeek}
+                        updateCommitsPerDay={this.updateCommitsPerDay}
+                        updateCommitsPerWeek={this.updateCommitsPerWeek}
                     />
                     <Row style={{marginTop:'3vw'}}>
                         <Col>
