@@ -39,7 +39,7 @@ router.post('/commitOneUser', ensureAuthenticated, async (req: Request, res: Res
       email: username,
       ghPersonalKey,
     });
-    await GitTools.runCommitJob(account);
+    await GitTools.commitOneUser(account);
     APITools.respond('Successfully committed', 200, res)
   } catch (err) {
     console.log(err)
