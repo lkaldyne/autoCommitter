@@ -4,11 +4,32 @@ import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
 
 export class SettingsAdjustments extends React.Component {   
-    state = {
-        loggedIn: true,
-        user: {},
-        commitLoading: false,
-        passResetCollapse: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            loggedIn: true,
+            user: {},
+            commitLoading: false,
+            passResetCollapse: false,
+            commitsPerWeek: 0,
+            commitsPerDay: 0
+        }
+    }
+   
+    
+    defaults = {
+        commitValue: 3, 
+    }
+
+    updateCommitDetails = () => {
+        console.log(this.state);
+        axios.defaults.withCredentials = true; 
+        axios.put('/api/profiles/user', { 
+            commitsPerDay: this.state.commitsPerDay,
+            commitsPerWeek: this.state.commitsPerWeek,
+        })
+        .then((response) => alert('Successfully updated your settings'))
+        .catch((err) => console.log(err))
     }
 
     render() {
@@ -16,29 +37,29 @@ export class SettingsAdjustments extends React.Component {
             <React.Fragment>        
                 <Row style={cardRowStyle}>
                     <Col sm={6} md={4}>
-                        Maximum Commits Per Day
+                        Minimum Commits Per Day
                     </Col>
                     <Col sm={6} md={8}>
-                    <Slider
-                        defaultValue={3}
-                        max={7}
-                        //getAriaValueText={valuetext}
-                        aria-labelledby="discrete-slider-always"
-                        valueLabelDisplay="auto"
-                        step={1}
-                        marks={marks}
-                    />
+                        <Slider
+                            onChange={(e, value) => this.setState({commitsPerDay: value})}
+                            defaultValue={this.props.commitsPerDay}
+                            max={7}
+                            aria-labelledby="discrete-slider-always"
+                            valueLabelDisplay="auto"
+                            step={1}
+                            marks={marks}
+                        />
                     </Col>
                 </Row>
                 <Row style={cardRowStyle}>
                     <Col sm={6} md={4}>
-                        Maximum Commits Per Week
+                        Maximum Commits Per Weak
                     </Col>
                     <Col sm={6} md={8}>
                         <Slider
-                            defaultValue={3}
+                            onChange={(e, value) => this.setState({commitsPerWeek: value})}
+                            defaultValue={this.props.commitsPerWeek}
                             max={7}
-                            //getAriaValueText={valuetext}
                             aria-labelledby="discrete-slider-always"
                             valueLabelDisplay="auto"
                             step={1}
@@ -48,7 +69,7 @@ export class SettingsAdjustments extends React.Component {
                 </Row>
                 <Row style={cardRowStyle}>
                     <Col sm={12} style={{textAlign:'right'}}>
-                        <Button color="secondary">Save Changes</Button>
+                        <Button color="secondary" onClick={this.updateCommitDetails}>Save Changes</Button>
                     </Col>
                 </Row>
             </React.Fragment>    
