@@ -6,16 +6,27 @@ export default class GithubTokenForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            errorMessage: ''
+            errorMessage: '',
+            newGithubToken: '',
         }
     }
 
-    changeGHKey = () => {
-        console.log("hello");
+    changeGHKey = (e) => {
+        e.preventDefault();
+        axios.defaults.withCredentials = true; 
+        axios.put('/api/profiles/userToken', {
+            newGithubToken: this.state.newGithubToken
+        })
+        .then((response) => {
+            alert('Successfully updated your Github Token')
+            document.getElementById("githubToken").value = "";   
+        })
+        .catch((err) => alert(err))
     }
 
     handleChange = (e) => {
-        this.setState({[e.target.name] : e.target.value})
+        this.setState({[e.target.name] : e.target.value});
+        this.setState({newGithubToken: e.target.value});
     }
 
     render() {
