@@ -54,7 +54,7 @@ export default class ForgotPasswordForm extends React.Component {
                     <Input type="password" name="password" id="password1" placeholder="" onChange={this.handleChange} required/>
                 </FormGroup>
                 <FormGroup>
-                    <Label for="examplePassword">Repeat New Password</Label>
+                    <Label for="examplePassword">Confirm New Password</Label>
                     <Input type="password" name="passwordRepeat" id="password2" placeholder="" onChange={this.handleChange} required/>
                 </FormGroup>
                 <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '15px'}}>
