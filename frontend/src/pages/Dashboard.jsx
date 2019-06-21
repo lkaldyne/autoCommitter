@@ -93,7 +93,7 @@ export class Dashboard extends React.Component {
               "Welcome Back"
             }
           </h3>
-            <Row>
+            <Row style={{width:"100%"}}>
               <Col md={8}>
                 <Card body style={adjustSettingsStyle}>
                   <CardHeader>Adjust Your Settings</CardHeader>
