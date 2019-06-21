@@ -6,33 +6,20 @@ import axios from 'axios';
 export class SettingsAdjustments extends React.Component {   
     constructor(props) {
         super(props)
-        this.state = {
-            loggedIn: true,
-            user: {},
-            commitLoading: false,
-            passResetCollapse: false,
-            commitsPerWeek: 0,
-            commitsPerDay: 0
-        }
-    }
-   
-    
-    defaults = {
-        commitValue: 3, 
     }
 
     updateCommitDetails = () => {
-        console.log(this.state);
         axios.defaults.withCredentials = true; 
-        axios.put('/api/profiles/user', { 
-            commitsPerDay: this.state.commitsPerDay,
-            commitsPerWeek: this.state.commitsPerWeek,
+        axios.put('/api/profiles/user', {
+            commitsPerDay: this.props.commitsPerDay,
+            commitsPerWeek: this.props.commitsPerWeek,
         })
         .then((response) => alert('Successfully updated your settings'))
         .catch((err) => console.log(err))
     }
 
     render() {
+        console.log(this.props.commitsPerDay)
         return (
             <React.Fragment>        
                 <Row style={cardRowStyle}>
@@ -40,31 +27,39 @@ export class SettingsAdjustments extends React.Component {
                         Minimum Commits Per Day
                     </Col>
                     <Col sm={6} md={8}>
-                        <Slider
-                            onChange={(e, value) => this.setState({commitsPerDay: value})}
-                            defaultValue={this.props.commitsPerDay}
-                            max={7}
-                            aria-labelledby="discrete-slider-always"
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks={marks}
-                        />
+                        { this.props.commitsPerDay !== undefined ? 
+                            <Slider
+                                onChange={(e, value) => this.props.updateCommitsPerDay(value)}
+                                defaultValue={this.props.commitsPerDay}
+                                max={25}
+                                aria-labelledby="discrete-slider-always"
+                                valueLabelDisplay="auto"
+                                step={1}
+                                marks
+                            />
+                        :
+                            <p>Loading Slider</p>
+                        }
                     </Col>
                 </Row>
                 <Row style={cardRowStyle}>
                     <Col sm={6} md={4}>
-                        Maximum Commits Per Weak
+                        Maximum Commits Per Week
                     </Col>
                     <Col sm={6} md={8}>
-                        <Slider
-                            onChange={(e, value) => this.setState({commitsPerWeek: value})}
-                            defaultValue={this.props.commitsPerWeek}
-                            max={7}
-                            aria-labelledby="discrete-slider-always"
-                            valueLabelDisplay="auto"
-                            step={1}
-                            marks={marks}
-                        />
+                        {this.props.commitsPerWeek !== undefined ?
+                            <Slider
+                                onChange={(e, value) => this.props.updateCommitsPerWeek(value)}
+                                defaultValue={this.props.commitsPerWeek}
+                                max={7}
+                                aria-labelledby="discrete-slider-always"
+                                valueLabelDisplay="auto"
+                                step={1}
+                                marks={marks}
+                            />
+                        :
+                            <p>Loading Slider</p>
+                        }
                     </Col>
                 </Row>
                 <Row style={cardRowStyle}>
