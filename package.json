@@ -11,7 +11,9 @@
     "build-ts": "tsc",
     "postinstall": "npm run build-ts",
     "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build",
-    "serve": "node build/index.js"
+    "serve": "node build/index.js",
+    "linter-backend": "npx eslint src/** --ext .ts",
+    "linter-backend-fix": "npx eslint src/** --ext .ts --fix"
   },
   "repository": {
     "type": "git",
@@ -37,12 +39,13 @@
     "@types/node": "^12.0.5",
     "@types/passport": "^1.0.0",
     "@types/passport-local": "^1.0.33",
+    "@typescript-eslint/eslint-plugin": "^1.10.2",
+    "@typescript-eslint/parser": "^1.10.2",
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "connect-mongo": "^2.0.3",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.0.0",
-    "eslint": "^5.16.0",
     "express": "^4.17.1",
     "express-session": "^1.16.1",
     "mongoose": "^5.5.14",
@@ -53,5 +56,14 @@
     "rmdir": "^1.2.0",
     "simple-git": "^1.113.0",
     "typescript": "^3.5.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-react-app": "^4.0.1",
+    "eslint-plugin-flowtype": "^3.10.3",
+    "eslint-plugin-import": "^2.17.3",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.13.0"
   }
 }

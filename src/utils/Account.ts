@@ -1,102 +1,105 @@
-import FileUtils from "./FileUtils";
-import path from "path";
-import { repoPath, commitFile, repoUrl } from "../index";
+import path from 'path';
+import FileUtils from './FileUtils';
+import { repoPath, commitFile, repoUrl } from '../index';
+
 const git = require('simple-git/promise');
 const rmdir = require('rmdir');
+
+export enum NumWeekdays {
+  ONE = 1,
+  TWO = 2,
+  THREE = 3,
+  FOUR = 4,
+  FIVE = 5,
+  SIX = 6,
+  SEVEN = 7
+}
 
 export interface IAccountInfo {
     email: string,
     ghPersonalKey: string,
+    maxCommitsPerDay?: number,
+    maxCommitsPerWeek?: NumWeekdays
 }
 
 export default class Account {
     private remote: string;
     private info: IAccountInfo;
-    public error: boolean = false;
-    public errorMsg : string = '';
-    maxNumberOfCommitsPerDay: number;
-    commitDaysPerWeek: number;
 
     constructor(info: IAccountInfo) {
-        this.info = info
-        this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
+      this.info = info;
+      this.remote = `https://${this.info.ghPersonalKey}@${repoUrl}`;
     }
 
-    private errorHandler(err: any, callback: () => void) {
-        this.error = true;
-        this.errorMsg = err;
-        console.error('failed: ', err)
-        callback();
+    public getMaxNumberOfCommitsPerDay() {
+      return this.info.maxCommitsPerDay
     }
 
-    public clone(callback: () => void, errCallback: () => void): void {       
-        git()
+    public getMaxNumberOfCommitsPerWeek() {
+      return this.info.maxCommitsPerWeek
+    }
+
+    public async clone() {
+      this.log("Cloning")
+      return git()
         .silent(true)
         .clone(this.remote)
-        .then(() => {
-            console.log("cloned");
-            callback();
-        })
-        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public stage(callback: () => void, errCallback: () => void) {
-        git(repoPath)
+    public stage() {
+      this.log("Staging")
+      return git(repoPath)
         .silent(true)
         .add([commitFile])
-        .then(() => {
-            console.log("staged");
-            callback();
-        })
-        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public alterFile(callback: () => void, errCallback: () => void): void {
+    public alterFile() {
+      this.log("Altering File")
+      return new Promise((resolve, reject) => {
         FileUtils.createCommitDiff(path.join(repoPath, commitFile), (err: any) => {
-            if (err) {
-                this.errorHandler(err, errCallback);
-            }
-            console.log("file modified");
-            callback();
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
         });
+      })
     }
 
-    public commit(callback: () => void, errCallback: () => void) {
-        git(repoPath)
+    public async commit() {
+      this.log("Committing")
+      return git(repoPath)
         .silent(true)
-        .commit("commit", {
-            '--author': `test<${this.info.email}>`
+        .commit('commit', {
+          '--author': `test<${this.info.email}>`,
         })
-        .then(() => {
-            console.log("file committed")
-            callback()
-        })
-        .catch((error: any) => this.errorHandler(error,errCallback));
     }
 
-    public push(callback: () => void, errCallback: () => void) {
-        git(repoPath)
+    public push() {
+      this.log("Pushing")
+      return git(repoPath)
         .silent(true)
-        .push(this.remote, "master")
-        .then(() => {
-            console.log("pushed")
-            callback()
-        })
-        .catch((error: any) => this.errorHandler(error,errCallback));
+        .push(this.remote, 'master')
     }
 
-    public removeRepo(callback: () => void) {
+    public removeRepo() {
+      this.log("Removing Repo")
+      return new Promise((resolve, reject) => {
         rmdir(repoPath, () => {
-            console.log("repo deleted")
-            callback()
+          resolve();
         });
+      })
     }
 
     public shouldTheyCommitToday(): boolean {
-        return ((this.commitDaysPerWeek / 7) >= Math.random())
+      return ((this.info.maxCommitsPerWeek / 7) >= Math.random());
     }
 
     public getNumberOfCommits(): number {
-        return (this.maxNumberOfCommitsPerDay * Math.random())
+      return Math.floor((this.info.maxCommitsPerDay * Math.random()));
+    }
+
+    public log(message: string): void {
+      console.log(`${new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '')} ${this.info.email} | ${message}`)
     }
 }
