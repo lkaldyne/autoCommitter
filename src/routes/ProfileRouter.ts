@@ -64,6 +64,19 @@ router.put('/user', ensureAuthenticated, (req: Request, res: Response) => {
     });
 });
 
+router.put('/userToken', ensureAuthenticated, (req: Request, res: Response) => {
+  const { newGithubToken } = req.body;
+  if (newGithubToken == undefined) return res.redirect('/auth/missingFieldError');
+  req.user.github_token = crypto_utils.encrypt(newGithubToken);
+  req.user.save()
+    .then((user: any) => {
+      APITools.respond('Successfully updated user.', 200, res);
+    })
+    .catch((err: Error) => {
+      APITools.respond(err.toString() , 500, res);
+    });
+});
+
 router.delete('/user', ensureAuthenticated, (req: Request, res: Response) => {
   User.findByIdAndDelete({ _id: req.user.id })
     .then((user) => {
