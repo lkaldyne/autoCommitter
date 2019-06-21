@@ -1,8 +1,6 @@
 import React from 'react'
 import axios from 'axios'
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
-import { Redirect } from 'react-router-dom'
-import { isPropertyAccessExpression } from 'typescript';
 
 export default class GithubTokenForm extends React.Component {
     constructor(props) {
