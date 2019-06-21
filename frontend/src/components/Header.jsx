@@ -62,7 +62,10 @@ class Header extends React.Component {
             >
               <PopoverHeader>What would you like to do?</PopoverHeader>
               <PopoverBody>
-                  <a href='/' onClick={this.props.userLogout}>LogOut</a>
+                  <a href='/' onClick={() => {
+                    this.props.stateClear();
+                    this.props.userLogout();
+                  }}>LogOut</a>
               </PopoverBody>
             </Popover>
           </div>
