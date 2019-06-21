@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Spinner, Col, Row, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
+import { Button, Col, Row } from 'reactstrap';
 import Slider from '@material-ui/lab/Slider';
 import axios from 'axios';
 
