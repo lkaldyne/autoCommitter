@@ -1,9 +1,8 @@
 import React from 'react'
 import axios from 'axios'
 import { Button, Form, FormGroup, Label, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
-import { Redirect } from 'react-router-dom'
 
-export default class ForgotPasswordForm extends React.Component {
+export default class PasswordResetForm extends React.Component {
     state = {
         errorMessage: '',
     }
@@ -17,33 +16,35 @@ export default class ForgotPasswordForm extends React.Component {
 
     passReset = (e) => {
         e.preventDefault();
-        const {username, password, github_token} = this.state;
-        axios.post(`/api/profiles/register`, {username, password, github_token})
+        axios.defaults.withCredentials = true; 
+        let oldPassword = document.getElementById('oldPassword').value
+        let password1 = document.getElementById('password1').value
+        let password2 = document.getElementById('password2').value
+        axios.put(`/api/profiles/userNewPass`, {oldPassword, password1, password2})
         .then(res => {
             if (res.status === 200) {
-                axios.post(`/api/profiles/login`, {username, password})
-                .then(res => {
-                    this.setState(() => ({
-                        toDashboard: true,
-                    }))
-                })
+                this.setState(() => ({
+                    errorMessage: ''
+                }))
+                document.getElementById('oldPassword').value = ''
+                document.getElementById('password1').value = ''
+                document.getElementById('password2').value = ''
+                alert('Password Has Been Changed');
             } else {
                 this.setState(() => ({
-                    errorMessage: 'Unexpected error.'
+                    errorMessage: res.data.description
                 }))
+                
             }
         })
-        .catch(res => {
-            this.setState(() => ({
-                errorMessage: 'User already exists.'
-            }))
+        .catch(res => { 
+            alert("Unexpected Error Occurred. Try Again Later");    
         })
     }
 
     render() {
         return (
             <div style={signupWrapper}>
-                <h4 style={{paddingBottom: '15px'}}>Reset Password</h4>
                 <Form onSubmit={this.passReset} method="POST">
                 <FormGroup>
                     <Label for="exampleEmail">Old Password</Label>
