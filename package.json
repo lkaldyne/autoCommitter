@@ -10,10 +10,11 @@
     "start": "npm run serve",
     "build-ts": "tsc",
     "postinstall": "npm run build-ts",
-    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd frontend && npm install --only=dev && npm install && npm run build && npm run git-set-global-user",
     "serve": "node build/index.js",
     "linter-backend": "npx eslint src/** --ext .ts",
-    "linter-backend-fix": "npx eslint src/** --ext .ts --fix"
+    "linter-backend-fix": "npx eslint src/** --ext .ts --fix",
+    "git-set-global-user": "git config --global user.email 'burner.github@gmail.com' && git config --global user.name 'autocommiter'"
   },
   "repository": {
     "type": "git",
