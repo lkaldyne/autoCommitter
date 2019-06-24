@@ -42,7 +42,10 @@ export class Dashboard extends React.Component {
     this.setState({commitLoading: false});
     alert("Commit Successful");
     })
-    .catch((err) => alert(err))
+    .catch((err) => {
+      alert(err);
+      this.setState({commitLoading: false});
+    })
   }
 
   componentDidMount = () => {
@@ -121,8 +124,8 @@ export class Dashboard extends React.Component {
                                 {                        
                                     this.state.commitLoading ?
                                         <React.Fragment>
-                                            <Button disabled>Commit Now (Manually)</Button>
-                                            <Spinner className="align-middle" type="grow" color="dark" style={{marginLeft:'1vh'}}/>
+                                            
+                                            <Spinner className="align-middle" type="grow" color="dark" />
                                         </React.Fragment> 
                                         
                                     :
