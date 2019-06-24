@@ -5,6 +5,7 @@ import { User, saveUser } from '../models/User';
 import { ensureAuthenticated } from '../utils/passport';
 import * as crypto_utils from '../utils/Encrypt';
 import { APITools } from './APITools';
+import bcrypt from 'bcrypt';
 
 const router: Router = Router();
 
@@ -75,6 +76,32 @@ router.put('/userToken', ensureAuthenticated, (req: Request, res: Response) => {
     .catch((err: Error) => {
       APITools.respond(err.toString() , 500, res);
     });
+});
+
+router.put('/userNewPass', ensureAuthenticated, (req: Request, res: Response) => {
+  const { oldPassword, password1, password2 } = req.body;
+  if (oldPassword === undefined || password1 === undefined || password2 === undefined) return res.redirect('/auth/missingFieldError');
+  bcrypt.compare(oldPassword, req.user.password, (err: Error, isMatch: boolean) => {
+    if (err) console.error(err);
+    if (isMatch) {
+      if (password1 === password2) {
+        req.user.password = password1
+        saveUser(req.user, (err: Error) => {
+          if (err) {
+            APITools.respond(err.message, 500, res);
+          } else {
+            APITools.respond('Successfully Updated User.', 200, res);
+          }
+        })
+      }
+      else {
+        APITools.respond('New Passwords do not Match', 201, res)
+      }  
+    }
+    else {
+      APITools.respond('Old Password is Incorrect', 201, res)
+    }
+  });
 });
 
 router.delete('/user', ensureAuthenticated, (req: Request, res: Response) => {
