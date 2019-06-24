@@ -5,7 +5,7 @@ import { Redirect} from 'react-router-dom';
 import { Button, Spinner, Col, Row, Card, CardHeader, CardBody, Collapse } from 'reactstrap';
 import axios from 'axios';
 import GithubTokenForm from '../components/Forms/GithubTokenForm';
-import ForgotPasswordForm from '../components/Forms/ForgotPasswordForm';
+import PasswordResetForm from '../components/Forms/PasswordResetForm';
 import { SettingsAdjustments } from '../components/SettingsAdjustments';
 
 export class Dashboard extends React.Component {   
@@ -130,13 +130,13 @@ export class Dashboard extends React.Component {
                                 }
                             </Col>
                             <Col style={{textAlign:"center"}} sm={6}>
-                                <Button color="primary" onClick={this.toggleCollapse}>Forgot Password?</Button>
+                                <Button color="primary" onClick={this.toggleCollapse}>Change Password</Button>
                             </Col>
                         </Row>
                         <Row>
                             <Col xs={12}>
                                 <Collapse isOpen={this.state.passResetCollapse}>
-                                    <ForgotPasswordForm />
+                                    <PasswordResetForm />
                                 </Collapse>
                             </Col>
                         </Row>
