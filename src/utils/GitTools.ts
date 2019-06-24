@@ -17,7 +17,12 @@ export default class GitTools {
     account.log(`committing?: ${isCommitting} (${account.getMaxNumberOfCommitsPerWeek()} / 7)`)
     account.log(`Number of commits: ${numCommits} / ${account.getMaxNumberOfCommitsPerDay()}`)
     if (isCommitting) {
-      await account.clone()
+      try {
+        await account.clone()
+      } catch(e) {
+        await account.removeRepo()
+        await account.clone()
+      }
       for (let i = 0; i < numCommits; i++) {
         await account.alterFile()
         await account.stage()
