@@ -85,7 +85,8 @@ router.put('/userNewPass', ensureAuthenticated, (req: Request, res: Response) =>
     if (err) console.error(err);
     if (isMatch) {
       if (password1 === password2) {
-        req.user.password = password1
+        req.user.password = password1;
+        req.user.github_token = crypto_utils.decrypt(req.user.github_token);
         saveUser(req.user, (err: Error) => {
           if (err) {
             APITools.respond(err.message, 500, res);
