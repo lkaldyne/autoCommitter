@@ -70,9 +70,12 @@ export default class Account {
       this.log("Committing")
       return git(repoPath)
         .silent(true)
-        .commit('commit', {
-          '--author': `test<${this.info.email}>`,
-        })
+        .addConfig('user.name', 'test')
+        .addConfig('user.email', this.info.email)
+        .commit("commit")
+        //.commit('commit', {
+        //  '--author': `test<${this.info.email}>`,
+        //})
     }
 
     public push() {
