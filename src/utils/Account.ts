@@ -42,14 +42,19 @@ export default class Account {
     public async clone() {
       this.log("Cloning")
       return git()
-        .silent(true)
+        .silent(false)
         .clone(this.remote)
     }
 
     public stage() {
       this.log("Staging")
+
+      require('simple-git')()
+      .addConfig('user.name', 'test')
+      .addConfig('user.email', this.info.email)
+
       return git(repoPath)
-        .silent(true)
+        .silent(false)
         .add([commitFile])
     }
 
@@ -69,9 +74,7 @@ export default class Account {
     public async commit() {
       this.log("Committing")
       return git(repoPath)
-        .silent(true)
-        .addConfig('user.name', 'test')
-        .addConfig('user.email', this.info.email)
+        .silent(false)
         .commit("commit")
         //.commit('commit', {
         //  '--author': `test<${this.info.email}>`,
@@ -81,7 +84,7 @@ export default class Account {
     public push() {
       this.log("Pushing")
       return git(repoPath)
-        .silent(true)
+        .silent(false)
         .push(this.remote, 'master')
     }
 
