@@ -23,6 +23,7 @@ const MongoStore = mongoStore(session);
 const app = express();
 dotenv.config();
 
+
 app.use((req: Request, res: Response, next: any) => {
   res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
   res.header('Access-Control-Allow-Credentials', 'true');

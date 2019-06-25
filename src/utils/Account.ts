@@ -49,9 +49,9 @@ export default class Account {
     public stage() {
       this.log("Staging")
 
-      require('simple-git')()
-      .addConfig('user.name', 'test')
-      .addConfig('user.email', this.info.email)
+      // require('simple-git')()
+      // .addConfig('user.name', 'test')
+      // .addConfig('user.email', this.info.email)
 
       return git(repoPath)
         .silent(false)
@@ -75,10 +75,9 @@ export default class Account {
       this.log("Committing")
       return git(repoPath)
         .silent(false)
-        .commit("commit")
-        //.commit('commit', {
-        //  '--author': `test<${this.info.email}>`,
-        //})
+        .commit('commit', {
+         '--author': `test<${this.info.email}>`,
+        })
     }
 
     public push() {
