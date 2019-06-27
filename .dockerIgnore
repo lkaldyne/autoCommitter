@@ -1,0 +1,8 @@
+build/
+node_modules/
+frontend/node_modules/
+docs/
+package-lock.json
+frontend/package-lock.json
+README.md
+.gitignore

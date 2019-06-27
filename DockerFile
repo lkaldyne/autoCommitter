@@ -1,0 +1,29 @@
+FROM node:10.15.3
+
+RUN apt-get update && apt-get install -y build-essential && apt-get install -y python && apt-get install -y git
+
+RUN mkdir -p /usr/src/app
+
+WORKDIR /usr/src/app
+
+COPY . /usr/src/app
+
+WORKDIR /usr/src/app/frontend
+
+RUN npm install
+RUN npm run build
+
+WORKDIR /usr/src/app/src
+
+RUN npm install -g typescript && npm install
+RUN tsc
+
+RUN git config --global user.name "autocommiter"
+RUN git config --global user.email "burner.github@gmail.com"
+
+EXPOSE 5000
+
+CMD [ "npm", "run", "dev" ]
+
+
+
